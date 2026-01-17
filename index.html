@@ -3,20 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 2.0</title>
+<title>MyGallery Premium 3.0</title>
 <style>
 :root {
-  --bg-light: #f0f4f8;
-  --bg-dark: #0b0c1b;
-  --card-light: #fff;
-  --card-dark: rgba(255,255,255,0.05);
-  --text-light: #333;
-  --text-dark: #eee;
   --accent: #4CAF50;
   --rename-btn: #2196F3;
   --delete-btn: #ff4d4d;
 }
 
+/* ====== BODY MODES ====== */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -26,59 +21,69 @@ body {
 }
 
 body.light {
-  background: var(--bg-light);
-  color: var(--text-light);
+  background: #f0f4f8;
+  color: #333;
 }
 
 body.dark {
-  background: var(--bg-dark);
-  color: var(--text-dark);
+  background: #000;
+  color: #fff;
   overflow: hidden;
 }
 
-body.dark::before {
+body.dark::after {
   content: '';
   position: fixed;
-  top:0;left:0;width:100%;height:100%;
+  top:0; left:0; width:100%; height:100%;
   background: transparent;
   pointer-events: none;
   z-index: 0;
 }
 
-/* Sidebar */
+/* ====== STARS BACKGROUND ====== */
+body.dark .star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: white;
+  border-radius: 50%;
+  animation: twinkle 3s infinite;
+  opacity: 0.8;
+}
+@keyframes twinkle {
+  0%, 100% {opacity: 0.2;}
+  50% {opacity: 1;}
+}
+
+/* ====== SIDEBAR ====== */
 #sidebar {
-  width: 200px;
-  background: rgba(0,0,0,0.1);
+  width: 220px;
+  background: rgba(255,255,255,0.05);
   padding: 20px;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid rgba(255,255,255,0.1);
 }
 
-body.dark #sidebar {
-  background: rgba(255,255,255,0.05);
-  border-right: 1px solid rgba(255,255,255,0.1);
+body.light #sidebar {
+  background: #f8f9fa;
+  border-right: 1px solid #ccc;
 }
 
 .gallery-item {
   padding: 8px 10px;
-  background: rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.1);
   border-radius: 8px;
   cursor: pointer;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  transition: background 0.3s, color 0.3s;
 }
 
-body.light .gallery-item {
-  background: rgba(0,0,0,0.05);
-}
+body.light .gallery-item { background: rgba(0,0,0,0.05); }
 
-.gallery-item.active {
-  font-weight: bold;
-  color: var(--accent);
-}
+.gallery-item.active { font-weight: bold; color: var(--accent); }
 
 .gallery-item button {
   background: none;
@@ -86,9 +91,10 @@ body.light .gallery-item {
   cursor: pointer;
   font-size: 12px;
   color: var(--accent);
+  margin-left: 5px;
 }
 
-/* Main content */
+/* ====== MAIN CONTENT ====== */
 #main {
   flex: 1;
   padding: 20px;
@@ -99,8 +105,8 @@ body.light .gallery-item {
 #topControls {
   display: flex;
   gap: 10px;
-  margin-bottom: 20px;
   flex-wrap: wrap;
+  margin-bottom: 20px;
 }
 
 button, input[type="file"], input[type="text"] {
@@ -111,9 +117,7 @@ button, input[type="file"], input[type="text"] {
   transition: 0.3s;
 }
 
-button:hover {
-  filter: brightness(0.9);
-}
+button:hover { filter: brightness(0.9); }
 
 #galleryContainer {
   display: grid;
@@ -121,92 +125,67 @@ button:hover {
   gap: 20px;
 }
 
-/* File card */
+/* ====== FILE CARDS ====== */
 .fileCard {
   position: relative;
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  background: var(--card-light);
+  background: rgba(255,255,255,0.1);
   transition: transform 0.3s, box-shadow 0.3s;
 }
 
-body.dark .fileCard {
-  background: var(--card-dark);
-}
+body.light .fileCard { background: #fff; }
 
-.fileCard:hover {
-  box-shadow: 0 12px 28px rgba(0,0,0,0.2);
-  transform: translateY(-4px);
-}
+body.dark .fileCard { background: rgba(255,255,255,0.05); }
 
-.fileCard img, .fileCard video {
-  width: 100%;
-  display: block;
-  border-bottom: 1px solid #eee;
-}
+.fileCard:hover { transform: translateY(-4px); box-shadow:0 12px 28px rgba(0,0,0,0.2); }
 
-.fileName {
-  text-align: center;
-  padding: 6px 8px;
-  font-size: 14px;
-  font-weight: 500;
-}
+.fileCard img, .fileCard video { width: 100%; display:block; border-radius:16px 16px 0 0; }
+
+.fileName { text-align:center; padding:6px 8px; font-size:14px; font-weight:500; }
 
 .actionBtn {
   position: absolute;
   top: 10px;
   opacity: 0;
   pointer-events: none;
-  padding: 4px 8px;
-  font-size: 12px;
-  border-radius: 6px;
-  border: none;
-  cursor: pointer;
-  transition: 0.3s;
+  padding:4px 8px;
+  font-size:12px;
+  border-radius:6px;
+  border:none;
+  cursor:pointer;
+  transition:0.3s;
 }
 
-.fileCard:hover .actionBtn {
-  opacity: 1;
-  pointer-events: auto;
-}
+.fileCard:hover .actionBtn { opacity:1; pointer-events:auto; transform: scale(1.1); }
 
-.renameBtn {
-  left: 10px;
-  background: var(--rename-btn);
-  color: #fff;
-}
-
-.deleteBtn {
-  right: 10px;
-  background: var(--delete-btn);
-  color: #fff;
-}
+.renameBtn { left: 10px; background: var(--rename-btn); color:#fff; }
+.deleteBtn { right: 10px; background: var(--delete-btn); color:#fff; }
 
 #modal {
   display: none;
   position: fixed;
   z-index: 1000;
-  top:0;left:0;width:100%;height:100%;
+  top:0; left:0; width:100%; height:100%;
   background: rgba(0,0,0,0.85);
-  justify-content: center;
-  align-items: center;
+  justify-content:center;
+  align-items:center;
 }
 
 #modalContent img, #modalContent video {
-  max-width: 90%;
-  max-height: 90%;
-  border-radius: 16px;
+  max-width:90%; max-height:90%; border-radius:16px;
 }
 
-#closeModal {
-  position: absolute;
-  top: 20px;
-  right: 30px;
-  font-size: 36px;
-  font-weight: bold;
-  cursor: pointer;
-  color: #fff;
+#closeModal { position:absolute; top:20px; right:30px; font-size:36px; cursor:pointer; color:#fff; }
+
+.modeBtn {
+  font-size:18px;
+  border-radius:8px;
+  padding:6px;
+  cursor:pointer;
+  text-align:center;
+  width:36px; height:36px;
 }
 </style>
 </head>
@@ -215,8 +194,8 @@ body.dark .fileCard {
 <div id="sidebar">
   <h3>Galleries</h3>
   <div id="galleriesList"></div>
-  <button id="addGalleryBtn">Nouvelle gallery</button>
-  <button id="toggleMode">Mode Nuit</button>
+  <button id="addGalleryBtn">➕</button>
+  <button id="toggleMode" class="modeBtn">🌙</button>
 </div>
 
 <div id="main">
@@ -262,10 +241,12 @@ function renderGalleries(){
     const div = document.createElement('div');
     div.classList.add('gallery-item');
     if(name === currentGallery) div.classList.add('active');
+    div.style.color = galleries[name].color || '';
     div.textContent = name;
     
     const renameBtn = document.createElement('button');
-    renameBtn.textContent = 'Rename';
+    renameBtn.textContent = '✏️';
+    renameBtn.title = 'Rename gallery';
     renameBtn.addEventListener('click',(e)=>{
       e.stopPropagation();
       const newName = prompt("Nouveau nom pour la gallery :", name);
@@ -278,7 +259,22 @@ function renderGalleries(){
         renderGalleryFiles();
       }
     });
+
+    const colorBtn = document.createElement('button');
+    colorBtn.textContent = '🎨';
+    colorBtn.title = 'Changer couleur';
+    colorBtn.addEventListener('click',(e)=>{
+      e.stopPropagation();
+      const newColor = prompt("Couleur du nom de la gallery (ex: red, #f00) :", galleries[name].color||'#4CAF50');
+      if(newColor){
+        galleries[name].color = newColor;
+        saveGalleries();
+        renderGalleries();
+      }
+    });
+
     div.appendChild(renameBtn);
+    div.appendChild(colorBtn);
 
     div.addEventListener('click',()=>{
       currentGallery = name;
@@ -292,7 +288,7 @@ function renderGalleries(){
 function renderGalleryFiles(){
   galleryContainer.innerHTML = '';
   const files = galleries[currentGallery];
-  files.forEach((fileData, index)=>{
+  files.forEach((fileData,index)=>{
     const card = document.createElement('div');
     card.classList.add('fileCard');
 
@@ -394,9 +390,33 @@ addGalleryBtn.addEventListener('click',()=>{
 });
 
 toggleModeBtn.addEventListener('click',()=>{
-  body.classList.toggle('dark');
-  body.classList.toggle('light');
+  if(body.classList.contains('light')){
+    body.classList.remove('light'); body.classList.add('dark');
+    toggleModeBtn.textContent = '🌞';
+    generateStars();
+  }else{
+    body.classList.remove('dark'); body.classList.add('light');
+    toggleModeBtn.textContent = '🌙';
+    removeStars();
+  }
 });
+
+// ======== STARS NIGHT ========
+function generateStars(){
+  removeStars();
+  for(let i=0;i<200;i++){
+    const star = document.createElement('div');
+    star.className='star';
+    star.style.top=Math.random()*100+'%';
+    star.style.left=Math.random()*100+'%';
+    star.style.width=star.style.height=Math.random()*2+1+'px';
+    star.style.animationDuration= 2+Math.random()*3 +'s';
+    document.body.appendChild(star);
+  }
+}
+function removeStars(){
+  document.querySelectorAll('.star').forEach(s=>s.remove());
+}
 
 // ======== INIT ========
 renderGalleries();
@@ -404,6 +424,7 @@ renderGalleryFiles();
 </script>
 </body>
 </html>
+
 
 
 
