@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Gallery</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+    }
+    h1 { color: #333; }
+    #uploadSection {
+      margin-bottom: 20px;
+    }
+    #gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .fileCard {
+      background: #fff;
+      padding: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 150px;
+    }
+    .fileCard img, .fileCard video {
+      max-width: 100%;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Your Gallery</h1>
+
+  <div id="uploadSection">
+    <input type="file" id="fileInput" multiple>
+    <input type="text" id="fileName" placeholder="Nom du fichier">
+    <button id="uploadBtn">Upload</button>
+  </div>
+
+  <div id="gallery"></div>
+
+  <script>
+    const fileInput = document.getElementById('fileInput');
+    const uploadBtn = document.getElementById('uploadBtn');
+    const gallery = document.getElementById('gallery');
+    const fileNameInput = document.getElementById('fileName');
+
+    uploadBtn.addEventListener('click', () => {
+      const files = fileInput.files;
+      if(files.length === 0) {
+        alert("Sélectionne au moins un fichier !");
+        return;
+      }
+
+      Array.from(files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const fileURL = e.target.result;
+          const card = document.createElement('div');
+          card.classList.add('fileCard');
+
+          const name = fileNameInput.value || file.name;
+
+          if(file.type.startsWith("image/")) {
+            card.innerHTML = `<img src="${fileURL}" alt="${name}"><p>${name}</p>`;
+          } else if(file.type.startsWith("video/")) {
+            card.innerHTML = `<video src="${fileURL}" controls></video><p>${name}</p>`;
+          } else {
+            card.innerHTML = `<p>${name}</p><a href="${fileURL}" download>Download</a>`;
+          }
+
+          gallery.appendChild(card);
+        }
+        reader.readAsDataURL(file);
+      });
+
+      // Reset
+      fileInput.value = "";
+      fileNameInput.value = "";
+    });
+  </script>
+
+</body>
+</html>
