@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 3.1</title>
+<title>MyGallery Premium 3.3</title>
 <style>
 :root {
   --accent: #4CAF50;
@@ -25,38 +25,38 @@ body.light { background: var(--bg-light); color:#333; }
 body.dark { background: var(--bg-dark); color:#fff; overflow:hidden; position:relative; }
 
 /* ===== STARS ===== */
-.star { position:absolute; border-radius:50%; background:white; opacity:0.8; animation:twinkle 4s infinite alternate ease-in-out; }
+.star { position:absolute; border-radius:50%; background:white; opacity:0.6; animation:twinkle 4s infinite alternate ease-in-out; }
 @keyframes twinkle { 0%,100%{opacity:0.2;} 50%{opacity:1;} }
 
 /* ===== SIDEBAR ===== */
-#sidebar { width:220px; background: rgba(255,255,255,0.05); padding:20px; display:flex; flex-direction:column; gap:10px; border-right:1px solid rgba(255,255,255,0.1); transition:background 0.5s; }
+#sidebar { width:240px; background: rgba(255,255,255,0.05); padding:20px; display:flex; flex-direction:column; gap:10px; border-right:1px solid rgba(255,255,255,0.1); transition:background 0.5s; }
 body.light #sidebar { background:#f8f9fa; border-right:1px solid #ccc; }
 
-.gallery-item { padding:8px 10px; border-radius:8px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition: background 0.3s, color 0.3s, transform 0.3s; }
-.gallery-item:hover { transform:scale(1.03); }
+.gallery-item { padding:8px 10px; border-radius:8px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition: background 0.3s, color 0.3s, transform 0.3s; box-shadow:0 0 3px rgba(255,255,255,0.2); }
+.gallery-item:hover { transform:scale(1.03); box-shadow:0 0 8px rgba(255,255,255,0.5); }
 .gallery-item.active { font-weight:bold; color: var(--accent); }
-.gallery-item button { background:none; border:none; cursor:pointer; font-size:12px; color:var(--accent); margin-left:5px; transition:0.3s, box-shadow 0.3s; }
+.gallery-item .btnGroup { display:flex; gap:4px; }
+.gallery-item button { background:none; border:none; cursor:pointer; font-size:12px; color:var(--accent); transition:0.3s, box-shadow 0.3s; box-shadow:0 0 2px rgba(255,255,255,0.4); border-radius:4px; width:24px; height:24px; display:flex; align-items:center; justify-content:center; }
 .gallery-item button:hover { transform:scale(1.2); box-shadow:0 0 10px rgba(255,255,255,0.7); }
 
 /* ===== MAIN ===== */
 #main { flex:1; padding:20px; display:flex; flex-direction:column; }
 #topControls { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
-button, input[type="file"], input[type="text"] { padding:10px 14px; border-radius:10px; border:1px solid #ccc; font-size:14px; transition:0.3s, box-shadow 0.3s; }
+button, input[type="file"], input[type="text"] { padding:10px 14px; border-radius:10px; border:1px solid #ccc; font-size:14px; transition:0.3s, box-shadow 0.3s; box-shadow:0 0 3px rgba(0,0,0,0.1); }
 button:hover { filter: brightness(0.9); box-shadow:0 0 15px rgba(255,255,255,0.4); }
 #galleryContainer { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:20px; }
 
 /* ===== FILE CARDS ===== */
-.fileCard { position:relative; border-radius:16px; overflow:hidden; cursor:pointer; background:rgba(255,255,255,0.1); transition: transform 0.4s, box-shadow 0.4s, opacity 0.4s; opacity:0; transform:translateY(20px); }
+.fileCard { position:relative; border-radius:16px; overflow:hidden; cursor:pointer; background:rgba(255,255,255,0.1); transition: transform 0.4s, box-shadow 0.4s, opacity 0.4s; opacity:0; transform:translateY(20px); box-shadow:0 0 5px rgba(255,255,255,0.2);}
 body.light .fileCard { background:#fff; }
 body.dark .fileCard { background:rgba(255,255,255,0.05); }
 .fileCard.show { opacity:1; transform:translateY(0); }
 .fileCard:hover { box-shadow:0 12px 28px rgba(0,0,0,0.4); transform:translateY(-4px); }
 .fileCard img, .fileCard video { width:100%; display:block; border-radius:16px 16px 0 0; }
 .fileName { text-align:center; padding:6px 8px; font-size:14px; font-weight:500; transition: color 0.3s; }
-.actionBtn { position:absolute; top:10px; opacity:0; pointer-events:none; padding:4px 8px; font-size:12px; border-radius:6px; border:none; cursor:pointer; transition:0.3s, box-shadow 0.3s; }
-.fileCard:hover .actionBtn { opacity:1; pointer-events:auto; transform:scale(1.1); }
-.renameBtn { left:10px; background:var(--rename-btn); color:#fff; box-shadow:0 0 10px var(--rename-btn); }
-.deleteBtn { right:10px; background:var(--delete-btn); color:#fff; box-shadow:0 0 10px var(--delete-btn); }
+.actionBtn { position:absolute; top:10px; opacity:1; pointer-events:auto; padding:4px 8px; font-size:12px; border-radius:6px; border:none; cursor:pointer; transition:0.3s, box-shadow 0.3s; box-shadow:0 0 4px rgba(255,255,255,0.3); }
+.renameBtn { left:10px; background:var(--rename-btn); color:#fff; box-shadow:0 0 8px var(--rename-btn); }
+.deleteBtn { right:10px; background:var(--delete-btn); color:#fff; box-shadow:0 0 8px var(--delete-btn); }
 
 /* ===== MODAL ===== */
 #modal { display:none; position:fixed; z-index:1000; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); justify-content:center; align-items:center; }
@@ -65,7 +65,7 @@ body.dark .fileCard { background:rgba(255,255,255,0.05); }
 #closeModal:hover { transform: scale(1.2); }
 
 /* ===== MODE BTN ===== */
-.modeBtn { font-size:18px; border-radius:8px; padding:6px; cursor:pointer; text-align:center; width:36px; height:36px; transition: transform 0.3s, box-shadow 0.3s; }
+.modeBtn { font-size:18px; border-radius:8px; padding:6px; cursor:pointer; text-align:center; width:36px; height:36px; display:flex; justify-content:center; align-items:center; transition: transform 0.3s, box-shadow 0.3s; box-shadow:0 0 4px rgba(255,255,255,0.3);}
 .modeBtn:hover { transform: scale(1.2); box-shadow:0 0 15px #fff; }
 </style>
 </head>
@@ -121,13 +121,16 @@ function renderGalleries(){
     div.style.color=galleries[name].color||'';
     div.textContent=name;
 
+    const btnGroup=document.createElement('div'); btnGroup.className='btnGroup';
     const renameBtn=document.createElement('button'); renameBtn.textContent='✏️'; renameBtn.title='Rename';
     renameBtn.addEventListener('click',e=>{e.stopPropagation(); const newName=prompt("Nouveau nom:",name); if(newName&&!galleries[newName]){ galleries[newName]=galleries[name]; delete galleries[name]; if(currentGallery===name) currentGallery=newName; saveGalleries(); renderGalleries(); renderGalleryFiles(); } });
 
     const colorBtn=document.createElement('button'); colorBtn.textContent='🎨'; colorBtn.title='Couleur';
     colorBtn.addEventListener('click',e=>{e.stopPropagation(); let choice=prompt("Couleur? Options: black, red, orange, yellow, green, blue, purple, pink", galleries[name].color||'black'); if(choice && colorOptions.includes(choice)){ galleries[name].color=choice; saveGalleries(); renderGalleries(); }});
 
-    div.appendChild(renameBtn); div.appendChild(colorBtn);
+    btnGroup.appendChild(renameBtn); btnGroup.appendChild(colorBtn);
+    div.appendChild(btnGroup);
+
     div.addEventListener('click',()=>{ currentGallery=name; renderGalleries(); renderGalleryFiles(); });
     galleriesList.appendChild(div);
   }
@@ -195,6 +198,7 @@ renderGalleries(); renderGalleryFiles();
 </script>
 </body>
 </html>
+
 
 
 
