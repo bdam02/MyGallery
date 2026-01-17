@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium Ultra</title>
+<title>MyGallery Premium 3.1</title>
 <style>
 :root {
   --accent: #4CAF50;
@@ -13,7 +13,7 @@
   --bg-dark: #000;
 }
 
-/* ====== BODY MODES ====== */
+/* ===== BODY MODES ===== */
 body {
   margin: 0;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -21,81 +21,52 @@ body {
   height: 100vh;
   transition: background 0.5s, color 0.5s;
 }
+body.light { background: var(--bg-light); color:#333; }
+body.dark { background: var(--bg-dark); color:#fff; overflow:hidden; position:relative; }
 
-body.light { background: var(--bg-light); color: #333; }
-body.dark { background: var(--bg-dark); color: #fff; overflow: hidden; position: relative; }
+/* ===== STARS ===== */
+.star { position:absolute; border-radius:50%; background:white; opacity:0.8; animation:twinkle 4s infinite alternate ease-in-out; }
+@keyframes twinkle { 0%,100%{opacity:0.2;} 50%{opacity:1;} }
 
-/* ====== STARS ====== */
-.star {
-  position: absolute;
-  border-radius: 50%;
-  background: white;
-  opacity: 0.8;
-  animation: twinkle 4s infinite alternate ease-in-out;
-}
-@keyframes twinkle {
-  0%,100% {opacity:0.2;}
-  50% {opacity:1;}
-}
+/* ===== SIDEBAR ===== */
+#sidebar { width:220px; background: rgba(255,255,255,0.05); padding:20px; display:flex; flex-direction:column; gap:10px; border-right:1px solid rgba(255,255,255,0.1); transition:background 0.5s; }
+body.light #sidebar { background:#f8f9fa; border-right:1px solid #ccc; }
 
-/* ====== SIDEBAR ====== */
-#sidebar {
-  width: 220px;
-  background: rgba(255,255,255,0.05);
-  padding: 20px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  border-right: 1px solid rgba(255,255,255,0.1);
-  transition: background 0.5s;
-}
-body.light #sidebar { background: #f8f9fa; border-right:1px solid #ccc; }
-
-.gallery-item {
-  padding: 8px 10px;
-  border-radius: 8px;
-  cursor: pointer;
-  display:flex; justify-content:space-between; align-items:center;
-  transition: background 0.3s, color 0.3s, transform 0.3s;
-}
-.gallery-item:hover { transform: scale(1.03); }
+.gallery-item { padding:8px 10px; border-radius:8px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; transition: background 0.3s, color 0.3s, transform 0.3s; }
+.gallery-item:hover { transform:scale(1.03); }
 .gallery-item.active { font-weight:bold; color: var(--accent); }
-.gallery-item button { background:none; border:none; cursor:pointer; font-size:12px; color:var(--accent); margin-left:5px; transition: transform 0.3s; }
-.gallery-item button:hover { transform: scale(1.2); }
+.gallery-item button { background:none; border:none; cursor:pointer; font-size:12px; color:var(--accent); margin-left:5px; transition:0.3s, box-shadow 0.3s; }
+.gallery-item button:hover { transform:scale(1.2); box-shadow:0 0 10px rgba(255,255,255,0.7); }
 
-/* ====== MAIN CONTENT ====== */
+/* ===== MAIN ===== */
 #main { flex:1; padding:20px; display:flex; flex-direction:column; }
 #topControls { display:flex; flex-wrap:wrap; gap:10px; margin-bottom:20px; }
-button, input[type="file"], input[type="text"] { padding:10px 14px; border-radius:10px; border:1px solid #ccc; font-size:14px; transition:0.3s; }
-button:hover { filter: brightness(0.9); box-shadow:0 0 10px rgba(255,255,255,0.4); }
+button, input[type="file"], input[type="text"] { padding:10px 14px; border-radius:10px; border:1px solid #ccc; font-size:14px; transition:0.3s, box-shadow 0.3s; }
+button:hover { filter: brightness(0.9); box-shadow:0 0 15px rgba(255,255,255,0.4); }
 #galleryContainer { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px,1fr)); gap:20px; }
 
-/* ====== FILE CARDS ====== */
-.fileCard {
-  position: relative; border-radius:16px; overflow:hidden; cursor:pointer;
-  background: rgba(255,255,255,0.1); transition: transform 0.4s, box-shadow 0.4s, opacity 0.4s;
-  opacity:0; transform:translateY(20px);
-}
+/* ===== FILE CARDS ===== */
+.fileCard { position:relative; border-radius:16px; overflow:hidden; cursor:pointer; background:rgba(255,255,255,0.1); transition: transform 0.4s, box-shadow 0.4s, opacity 0.4s; opacity:0; transform:translateY(20px); }
 body.light .fileCard { background:#fff; }
 body.dark .fileCard { background:rgba(255,255,255,0.05); }
 .fileCard.show { opacity:1; transform:translateY(0); }
-.fileCard:hover { box-shadow:0 12px 28px rgba(0,0,0,0.2); transform:translateY(-4px); }
+.fileCard:hover { box-shadow:0 12px 28px rgba(0,0,0,0.4); transform:translateY(-4px); }
 .fileCard img, .fileCard video { width:100%; display:block; border-radius:16px 16px 0 0; }
 .fileName { text-align:center; padding:6px 8px; font-size:14px; font-weight:500; transition: color 0.3s; }
-.actionBtn { position:absolute; top:10px; opacity:0; pointer-events:none; padding:4px 8px; font-size:12px; border-radius:6px; border:none; cursor:pointer; transition:0.3s; }
+.actionBtn { position:absolute; top:10px; opacity:0; pointer-events:none; padding:4px 8px; font-size:12px; border-radius:6px; border:none; cursor:pointer; transition:0.3s, box-shadow 0.3s; }
 .fileCard:hover .actionBtn { opacity:1; pointer-events:auto; transform:scale(1.1); }
-.renameBtn { left:10px; background:var(--rename-btn); color:#fff; box-shadow:0 0 8px var(--rename-btn); }
-.deleteBtn { right:10px; background:var(--delete-btn); color:#fff; box-shadow:0 0 8px var(--delete-btn); }
+.renameBtn { left:10px; background:var(--rename-btn); color:#fff; box-shadow:0 0 10px var(--rename-btn); }
+.deleteBtn { right:10px; background:var(--delete-btn); color:#fff; box-shadow:0 0 10px var(--delete-btn); }
 
-/* ====== MODAL ====== */
+/* ===== MODAL ===== */
 #modal { display:none; position:fixed; z-index:1000; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85); justify-content:center; align-items:center; }
 #modalContent img, #modalContent video { max-width:90%; max-height:90%; border-radius:16px; }
 #closeModal { position:absolute; top:20px; right:30px; font-size:36px; cursor:pointer; color:#fff; transition: transform 0.3s; }
 #closeModal:hover { transform: scale(1.2); }
 
-/* ====== MODE BTN ====== */
+/* ===== MODE BTN ===== */
 .modeBtn { font-size:18px; border-radius:8px; padding:6px; cursor:pointer; text-align:center; width:36px; height:36px; transition: transform 0.3s, box-shadow 0.3s; }
-.modeBtn:hover { transform: scale(1.2); box-shadow:0 0 10px #fff; }
+.modeBtn:hover { transform: scale(1.2); box-shadow:0 0 15px #fff; }
 </style>
 </head>
 <body class="light">
@@ -123,11 +94,10 @@ body.dark .fileCard { background:rgba(255,255,255,0.05); }
 </div>
 
 <script>
-// ======== DATA ========
 let galleries = JSON.parse(localStorage.getItem('galleries')) || { gallery1: [] };
 let currentGallery = 'gallery1';
+const colorOptions = ['black','red','orange','yellow','green','blue','purple','pink'];
 
-// ======== ELEMENTS ========
 const galleriesList = document.getElementById('galleriesList');
 const addGalleryBtn = document.getElementById('addGalleryBtn');
 const toggleModeBtn = document.getElementById('toggleMode');
@@ -141,28 +111,24 @@ const modalContent = document.getElementById('modalContent');
 const closeModal = document.getElementById('closeModal');
 const body = document.body;
 
-// ======== SAVE/RENDER ========
 function saveGalleries(){ localStorage.setItem('galleries', JSON.stringify(galleries)); }
 
 function renderGalleries(){
   galleriesList.innerHTML='';
   for(const name in galleries){
-    const div=document.createElement('div');
-    div.classList.add('gallery-item');
+    const div=document.createElement('div'); div.classList.add('gallery-item');
     if(name===currentGallery) div.classList.add('active');
-    div.style.color = galleries[name].color||'';
+    div.style.color=galleries[name].color||'';
     div.textContent=name;
 
-    const renameBtn=document.createElement('button'); renameBtn.textContent='✏️'; renameBtn.title='Rename gallery';
-    renameBtn.addEventListener('click',e=>{e.stopPropagation(); const newName=prompt("Nouveau nom :",name); if(newName&&!galleries[newName]){ galleries[newName]=galleries[name]; delete galleries[name]; if(currentGallery===name) currentGallery=newName; saveGalleries(); renderGalleries(); renderGalleryFiles(); }});
+    const renameBtn=document.createElement('button'); renameBtn.textContent='✏️'; renameBtn.title='Rename';
+    renameBtn.addEventListener('click',e=>{e.stopPropagation(); const newName=prompt("Nouveau nom:",name); if(newName&&!galleries[newName]){ galleries[newName]=galleries[name]; delete galleries[name]; if(currentGallery===name) currentGallery=newName; saveGalleries(); renderGalleries(); renderGalleryFiles(); } });
 
-    const colorBtn=document.createElement('button'); colorBtn.textContent='🎨'; colorBtn.title='Changer couleur';
-    colorBtn.addEventListener('click',e=>{e.stopPropagation(); const newColor=prompt("Couleur du nom :", galleries[name].color||'#4CAF50'); if(newColor){ galleries[name].color=newColor; saveGalleries(); renderGalleries(); }});
+    const colorBtn=document.createElement('button'); colorBtn.textContent='🎨'; colorBtn.title='Couleur';
+    colorBtn.addEventListener('click',e=>{e.stopPropagation(); let choice=prompt("Couleur? Options: black, red, orange, yellow, green, blue, purple, pink", galleries[name].color||'black'); if(choice && colorOptions.includes(choice)){ galleries[name].color=choice; saveGalleries(); renderGalleries(); }});
 
     div.appendChild(renameBtn); div.appendChild(colorBtn);
-
     div.addEventListener('click',()=>{ currentGallery=name; renderGalleries(); renderGalleryFiles(); });
-
     galleriesList.appendChild(div);
   }
 }
@@ -183,12 +149,10 @@ function renderGalleryFiles(){
     content+=`<button class="actionBtn deleteBtn">X</button>`;
     card.innerHTML=content;
 
-    const renameBtn=card.querySelector('.renameBtn');
-    const deleteBtn=card.querySelector('.deleteBtn');
-    const nameDiv=card.querySelector('.fileName');
+    const renameBtn=card.querySelector('.renameBtn'); const deleteBtn=card.querySelector('.deleteBtn'); const nameDiv=card.querySelector('.fileName');
 
-    renameBtn.addEventListener('click',()=>{ const newName=prompt("Nouveau nom:",fileData.name); if(newName){fileData.name=newName.trim(); nameDiv.textContent=fileData.name; saveGalleries();}});
-    deleteBtn.addEventListener('click',e=>{e.stopPropagation(); galleries[currentGallery].splice(index,1); saveGalleries(); renderGalleryFiles();});
+    renameBtn.addEventListener('click',()=>{ const newName=prompt("Nouveau nom:",fileData.name); if(newName){ fileData.name=newName.trim(); nameDiv.textContent=fileData.name; saveGalleries(); }});
+    deleteBtn.addEventListener('click',e=>{e.stopPropagation(); galleries[currentGallery].splice(index,1); saveGalleries(); renderGalleryFiles(); });
 
     card.addEventListener('click',e=>{ if(e.target!==renameBtn && e.target!==deleteBtn){
       modalContent.innerHTML='';
@@ -197,47 +161,41 @@ function renderGalleryFiles(){
       modal.style.display='flex'; }});
 
     galleryContainer.appendChild(card);
-    setTimeout(()=>card.classList.add('show'),50*(index+1)); // smooth animation
+    setTimeout(()=>card.classList.add('show'),50*(index+1));
   });
 }
 
-// ======== EVENTS ========
 uploadBtn.addEventListener('click',()=>{
   const files=fileInput.files; if(files.length===0) return alert("Sélectionne des fichiers !");
-  Array.from(files).forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=e=>{ galleries[currentGallery].push({name:file.name,type:file.type,data:e.target.result}); saveGalleries(); renderGalleryFiles(); };
-    reader.readAsDataURL(file);
-  });
+  Array.from(files).forEach(file=>{ const reader=new FileReader(); reader.onload=e=>{ galleries[currentGallery].push({name:file.name,type:file.type,data:e.target.result}); saveGalleries(); renderGalleryFiles(); }; reader.readAsDataURL(file); });
   fileInput.value='';
 });
 
 clearBtn.addEventListener('click',()=>{ if(confirm("Supprimer toute la gallery ?")){ galleries[currentGallery]=[]; saveGalleries(); renderGalleryFiles(); }});
 
-searchInput.addEventListener('input',()=>{ const query=searchInput.value.toLowerCase(); document.querySelectorAll('.fileCard').forEach(card=>{ const name=card.querySelector('.fileName').textContent.toLowerCase(); card.style.display=name.includes(query)?'block':'none';});});
+searchInput.addEventListener('input',()=>{ const query=searchInput.value.toLowerCase(); document.querySelectorAll('.fileCard').forEach(card=>{ const name=card.querySelector('.fileName').textContent.toLowerCase(); card.style.display=name.includes(query)?'block':'none';}); });
 
 closeModal.addEventListener('click',()=>modal.style.display='none');
 modal.addEventListener('click',e=>{if(e.target===modal) modal.style.display='none';});
 
-addGalleryBtn.addEventListener('click',()=>{ const newName=prompt("Nom de la nouvelle gallery :","gallery"+(Object.keys(galleries).length+1)); if(newName&&!galleries[newName]){ galleries[newName]=[]; saveGalleries(); renderGalleries(); }});
+addGalleryBtn.addEventListener('click',()=>{ const newName=prompt("Nom de la nouvelle gallery:","gallery"+(Object.keys(galleries).length+1)); if(newName&&!galleries[newName]){ galleries[newName]=[]; saveGalleries(); renderGalleries(); }});
 
 toggleModeBtn.addEventListener('click',()=>{
   if(body.classList.contains('light')){
-    body.classList.remove('light'); body.classList.add('dark'); toggleModeBtn.textContent='🌞'; generateStars();
+    body.classList.remove('light'); body.classList.add('dark'); toggleModeBtn.textContent='☀️'; generateStars();
   }else{
     body.classList.remove('dark'); body.classList.add('light'); toggleModeBtn.textContent='🌙'; removeStars();
   }
 });
 
-// ======== STARS NIGHT ========
-function generateStars(){ removeStars(); for(let i=0;i<200;i++){ const star=document.createElement('div'); star.className='star'; star.style.top=Math.random()*100+'%'; star.style.left=Math.random()*100+'%'; star.style.width=star.style.height=(Math.random()*2+1)+'px'; star.style.animationDuration=(2+Math.random()*3)+'s'; document.body.appendChild(star);} }
+function generateStars(){ removeStars(); for(let i=0;i<200;i++){ const star=document.createElement('div'); star.className='star'; star.style.top=Math.random()*100+'%'; star.style.left=Math.random()*100+'%'; star.style.width=star.style.height=(Math.random()*2+1)+'px'; star.style.animationDuration=(2+Math.random()*3)+'s'; document.body.appendChild(star); } }
 function removeStars(){ document.querySelectorAll('.star').forEach(s=>s.remove()); }
 
-// ======== INIT ========
 renderGalleries(); renderGalleryFiles();
 </script>
 </body>
 </html>
+
 
 
 
