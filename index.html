@@ -3,26 +3,18 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Premium Gallery</title>
+<title>Gallery</title>
 <style>
   /* ===== Body ===== */
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #e0eafc, #cfdef3);
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
     margin: 0;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-    transition: background 0.5s;
-  }
-
-  h1 {
-    color: #222;
-    margin-bottom: 25px;
-    letter-spacing: 1px;
-    font-weight: 700;
   }
 
   /* ===== Upload Section ===== */
@@ -185,8 +177,6 @@
 </head>
 <body>
 
-<h1>Premium Gallery</h1>
-
 <div id="uploadSection">
   <input type="file" id="fileInput" multiple>
   <input type="text" id="fileName" placeholder="Nom du fichier">
@@ -226,7 +216,8 @@ uploadBtn.addEventListener('click', () => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const fileURL = e.target.result;
-      const name = fileNameInput.value || file.name;
+      // si nom écrit, on remplace le nom
+      const name = fileNameInput.value.trim() || file.name;
 
       const fileData = { name, type: file.type, data: fileURL };
       savedFiles.push(fileData);
@@ -302,6 +293,7 @@ clearBtn.addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
