@@ -5,10 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gallery</title>
 <style>
-  /* ===== Body ===== */
   body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
+    background: linear-gradient(135deg, #4A90E2, #357ABD); /* fond bleu */
     margin: 0;
     padding: 20px;
     display: flex;
@@ -17,7 +16,6 @@
     min-height: 100vh;
   }
 
-  /* ===== Upload Section ===== */
   #uploadSection {
     display: flex;
     gap: 10px;
@@ -53,7 +51,6 @@
     background-color: #45a049;
   }
 
-  /* ===== Gallery ===== */
   #gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
@@ -104,7 +101,6 @@
     color: #4CAF50;
   }
 
-  /* Delete button */
   .deleteBtn {
     position: absolute;
     top: 10px;
@@ -131,7 +127,6 @@
     transform: scale(1.1);
   }
 
-  /* ===== Modal ===== */
   #modal {
     display: none;
     position: fixed;
@@ -186,7 +181,6 @@
 
 <div id="gallery"></div>
 
-<!-- Modal -->
 <div id="modal">
   <span id="closeModal">&times;</span>
   <div id="modalContent"></div>
@@ -202,10 +196,10 @@ const modal = document.getElementById('modal');
 const modalContent = document.getElementById('modalContent');
 const closeModal = document.getElementById('closeModal');
 
-let savedFiles = JSON.parse(localStorage.getItem('myGallery') || '[]');
+// RESET temporaire pour forcer l'update
+localStorage.removeItem('myGallery');
 
-// Charger fichiers au démarrage
-savedFiles.forEach(file => addFileCard(file, false));
+let savedFiles = [];
 
 // Upload
 uploadBtn.addEventListener('click', () => {
@@ -216,7 +210,6 @@ uploadBtn.addEventListener('click', () => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const fileURL = e.target.result;
-      // Remplacer le nom si on écrit quelque chose
       const name = fileNameInput.value.trim() || file.name;
 
       const fileData = { name, type: file.type, data: fileURL };
@@ -232,7 +225,6 @@ uploadBtn.addEventListener('click', () => {
   fileNameInput.value = "";
 });
 
-// Ajouter un fichier à la galerie
 function addFileCard(file, animate=true) {
   const card = document.createElement('div');
   card.classList.add('fileCard');
@@ -247,19 +239,14 @@ function addFileCard(file, animate=true) {
     card.innerHTML = `<div class="fileName">${file.name}</div><a href="${file.data}" download>Download</a><button class="deleteBtn">&times;</button>`;
   }
 
-  // Supprimer
-  const deleteBtn = card.querySelector('.deleteBtn');
-  deleteBtn.addEventListener('click', (e) => {
+  card.querySelector('.deleteBtn').addEventListener('click', (e)=>{
     e.stopPropagation();
-    if(confirm(`Supprimer "${file.name}" ?`)) {
-      gallery.removeChild(card);
-      savedFiles = savedFiles.filter(f => f !== file);
-      localStorage.setItem('myGallery', JSON.stringify(savedFiles));
-    }
+    gallery.removeChild(card);
+    savedFiles = savedFiles.filter(f => f!==file);
+    localStorage.setItem('myGallery', JSON.stringify(savedFiles));
   });
 
-  // Agrandir
-  card.addEventListener('click', () => {
+  card.addEventListener('click', ()=>{
     modalContent.innerHTML = "";
     if(file.type.startsWith("image/")) {
       const img = document.createElement('img');
@@ -272,27 +259,25 @@ function addFileCard(file, animate=true) {
       vid.autoplay = true;
       modalContent.appendChild(vid);
     }
-    modal.style.display = 'flex';
+    modal.style.display='flex';
   });
 
   gallery.appendChild(card);
 }
 
-// Fermer modal
-closeModal.addEventListener('click', () => modal.style.display = 'none');
-modal.addEventListener('click', (e) => { if(e.target === modal) modal.style.display = 'none'; });
+closeModal.addEventListener('click', ()=>modal.style.display='none');
+modal.addEventListener('click', (e)=>{ if(e.target===modal) modal.style.display='none'; });
 
-// Clear gallery
-clearBtn.addEventListener('click', () => {
-  if(confirm("Veux-tu vraiment supprimer toute la galerie ?")) {
-    savedFiles = [];
-    localStorage.removeItem('myGallery');
-    gallery.innerHTML = "";
-  }
+clearBtn.addEventListener('click', ()=>{
+  savedFiles = [];
+  localStorage.removeItem('myGallery');
+  gallery.innerHTML = "";
 });
 </script>
+
 </body>
 </html>
+
 
 
 
