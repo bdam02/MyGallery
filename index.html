@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gallery</title>
+<title>Gallery Premium</title>
 <style>
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -114,6 +114,11 @@ button:hover {
 
 .fileCard:hover .fileName {
     color: #4CAF50;
+}
+
+.fileName[contenteditable="true"] {
+    border-bottom: 1px dashed #4CAF50;
+    outline: none;
 }
 
 .deleteBtn {
@@ -227,8 +232,8 @@ uploadBtn.addEventListener('click', () => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const fileURL = e.target.result;
-      const chosenName = fileNameInput.value.trim(); // nom que tu écris
-      const name = chosenName || file.name; // remplace si rempli
+      const chosenName = fileNameInput.value.trim();
+      const name = chosenName || file.name;
 
       const fileData = { name, type: file.type, data: fileURL };
       savedFiles.push(fileData);
@@ -249,17 +254,24 @@ function addFileCard(file, animate=true) {
   if(animate) setTimeout(()=>card.classList.add('show'), 50);
   else card.classList.add('show');
 
-  // On met le NOM CHOISI sous le fichier
-  const nameToShow = file.name;
+  let nameToShow = file.name;
 
   if(file.type.startsWith("image/")) {
-    card.innerHTML = `<img src="${file.data}" alt="${nameToShow}"><div class="fileName">${nameToShow}</div><button class="deleteBtn">&times;</button>`;
+    card.innerHTML = `<img src="${file.data}" alt="${nameToShow}"><div class="fileName" contenteditable="true">${nameToShow}</div><button class="deleteBtn">&times;</button>`;
   } else if(file.type.startsWith("video/")) {
-    card.innerHTML = `<video src="${file.data}" controls></video><div class="fileName">${nameToShow}</div><button class="deleteBtn">&times;</button>`;
+    card.innerHTML = `<video src="${file.data}" controls></video><div class="fileName" contenteditable="true">${nameToShow}</div><button class="deleteBtn">&times;</button>`;
   } else {
-    card.innerHTML = `<div class="fileName">${nameToShow}</div><a href="${file.data}" download>Download</a><button class="deleteBtn">&times;</button>`;
+    card.innerHTML = `<div class="fileName" contenteditable="true">${nameToShow}</div><a href="${file.data}" download>Download</a><button class="deleteBtn">&times;</button>`;
   }
 
+  // Modifier le nom directement
+  const nameDiv = card.querySelector('.fileName');
+  nameDiv.addEventListener('input', () => {
+    file.name = nameDiv.textContent.trim();
+    localStorage.setItem('myGallery', JSON.stringify(savedFiles));
+  });
+
+  // Supprimer
   card.querySelector('.deleteBtn').addEventListener('click', (e)=>{
     e.stopPropagation();
     gallery.removeChild(card);
@@ -267,6 +279,7 @@ function addFileCard(file, animate=true) {
     localStorage.setItem('myGallery', JSON.stringify(savedFiles));
   });
 
+  // Agrandir
   card.addEventListener('click', ()=>{
     modalContent.innerHTML = "";
     if(file.type.startsWith("image/")) {
@@ -309,6 +322,7 @@ clearBtn.addEventListener('click', ()=>{
 
 </body>
 </html>
+
 
 
 
