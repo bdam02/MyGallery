@@ -5,38 +5,38 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gallery</title>
 <style>
-  body {
+body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background: linear-gradient(135deg, #f0f4f8, #d9e2ec); /* fond normal */
+    background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
     margin: 0;
     padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
     min-height: 100vh;
-  }
+}
 
-  #uploadSection {
+#uploadSection {
     display: flex;
     gap: 10px;
     flex-wrap: wrap;
     justify-content: center;
     margin-bottom: 20px;
-  }
+}
 
-  input[type="file"], input[type="text"] {
+input[type="file"], input[type="text"] {
     padding: 12px 14px;
     border-radius: 12px;
     border: 1px solid #ccc;
     font-size: 14px;
     transition: 0.3s;
-  }
+}
 
-  input[type="file"]:hover, input[type="text"]:hover {
+input[type="file"]:hover, input[type="text"]:hover {
     border-color: #4CAF50;
-  }
+}
 
-  button {
+button {
     padding: 12px 20px;
     border: none;
     border-radius: 12px;
@@ -45,14 +45,13 @@
     font-size: 14px;
     cursor: pointer;
     transition: 0.3s;
-  }
+}
 
-  button:hover {
+button:hover {
     background-color: #45a049;
-  }
+}
 
-  /* Barre de recherche */
-  #searchInput {
+#searchInput {
     padding: 10px 14px;
     border-radius: 12px;
     border: 1px solid #ccc;
@@ -60,22 +59,22 @@
     margin-bottom: 20px;
     width: 300px;
     transition: 0.3s;
-  }
+}
 
-  #searchInput:focus {
+#searchInput:focus {
     border-color: #4CAF50;
     outline: none;
-  }
+}
 
-  #gallery {
+#gallery {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
     gap: 20px;
     width: 100%;
     max-width: 1000px;
-  }
+}
 
-  .fileCard {
+.fileCard {
     background: #fff;
     border-radius: 16px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.12);
@@ -85,25 +84,25 @@
     transform: translateY(20px);
     opacity: 0;
     transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s;
-  }
+}
 
-  .fileCard.show {
+.fileCard.show {
     transform: translateY(0);
     opacity: 1;
-  }
+}
 
-  .fileCard:hover {
+.fileCard:hover {
     box-shadow: 0 12px 28px rgba(0,0,0,0.18);
-  }
+}
 
-  .fileCard img, .fileCard video {
+.fileCard img, .fileCard video {
     width: 100%;
     display: block;
     border-bottom: 1px solid #eee;
     border-radius: 16px 16px 0 0;
-  }
+}
 
-  .fileName {
+.fileName {
     padding: 8px 10px;
     text-align: center;
     font-size: 15px;
@@ -111,13 +110,13 @@
     color: #333;
     word-break: break-word;
     transition: color 0.3s;
-  }
+}
 
-  .fileCard:hover .fileName {
+.fileCard:hover .fileName {
     color: #4CAF50;
-  }
+}
 
-  .deleteBtn {
+.deleteBtn {
     position: absolute;
     top: 10px;
     right: 10px;
@@ -136,14 +135,14 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.2);
     opacity: 0;
     transition: opacity 0.3s, transform 0.3s;
-  }
+}
 
-  .fileCard:hover .deleteBtn {
+.fileCard:hover .deleteBtn {
     opacity: 1;
     transform: scale(1.1);
-  }
+}
 
-  #modal {
+#modal {
     display: none;
     position: fixed;
     z-index: 1000;
@@ -155,22 +154,22 @@
     justify-content: center;
     align-items: center;
     transition: opacity 0.3s;
-  }
+}
 
-  #modalContent img, #modalContent video {
+#modalContent img, #modalContent video {
     max-width: 90%;
     max-height: 90%;
     border-radius: 16px;
     box-shadow: 0 6px 20px rgba(0,0,0,0.3);
     animation: fadeIn 0.3s ease;
-  }
+}
 
-  @keyframes fadeIn {
+@keyframes fadeIn {
     from {opacity: 0; transform: scale(0.95);}
     to {opacity: 1; transform: scale(1);}
-  }
+}
 
-  #closeModal {
+#closeModal {
     position: absolute;
     top: 20px;
     right: 30px;
@@ -179,11 +178,11 @@
     font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
-  }
+}
 
-  #closeModal:hover {
+#closeModal:hover {
     color: #ff4d4d;
-  }
+}
 </style>
 </head>
 <body>
@@ -195,7 +194,6 @@
   <button id="clearBtn">Clear Gallery</button>
 </div>
 
-<!-- Barre de recherche -->
 <input type="text" id="searchInput" placeholder="Rechercher un fichier...">
 
 <div id="gallery"></div>
@@ -218,10 +216,9 @@ const closeModal = document.getElementById('closeModal');
 
 let savedFiles = JSON.parse(localStorage.getItem('myGallery') || '[]');
 
-// Charger fichiers au démarrage
+// Charger fichiers existants
 savedFiles.forEach(file => addFileCard(file, false));
 
-// Upload
 uploadBtn.addEventListener('click', () => {
   const files = fileInput.files;
   if(files.length === 0) return alert("Sélectionne au moins un fichier !");
@@ -230,7 +227,8 @@ uploadBtn.addEventListener('click', () => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const fileURL = e.target.result;
-      const name = fileNameInput.value.trim() || file.name; // Nom choisi remplacera le vrai nom
+      const chosenName = fileNameInput.value.trim(); // nom que tu écris
+      const name = chosenName || file.name; // remplace si rempli
 
       const fileData = { name, type: file.type, data: fileURL };
       savedFiles.push(fileData);
@@ -245,19 +243,21 @@ uploadBtn.addEventListener('click', () => {
   fileNameInput.value = "";
 });
 
-// Ajouter un fichier à la galerie
 function addFileCard(file, animate=true) {
   const card = document.createElement('div');
   card.classList.add('fileCard');
   if(animate) setTimeout(()=>card.classList.add('show'), 50);
   else card.classList.add('show');
 
+  // On met le NOM CHOISI sous le fichier
+  const nameToShow = file.name;
+
   if(file.type.startsWith("image/")) {
-    card.innerHTML = `<img src="${file.data}" alt="${file.name}"><div class="fileName">${file.name}</div><button class="deleteBtn">&times;</button>`;
+    card.innerHTML = `<img src="${file.data}" alt="${nameToShow}"><div class="fileName">${nameToShow}</div><button class="deleteBtn">&times;</button>`;
   } else if(file.type.startsWith("video/")) {
-    card.innerHTML = `<video src="${file.data}" controls></video><div class="fileName">${file.name}</div><button class="deleteBtn">&times;</button>`;
+    card.innerHTML = `<video src="${file.data}" controls></video><div class="fileName">${nameToShow}</div><button class="deleteBtn">&times;</button>`;
   } else {
-    card.innerHTML = `<div class="fileName">${file.name}</div><a href="${file.data}" download>Download</a><button class="deleteBtn">&times;</button>`;
+    card.innerHTML = `<div class="fileName">${nameToShow}</div><a href="${file.data}" download>Download</a><button class="deleteBtn">&times;</button>`;
   }
 
   card.querySelector('.deleteBtn').addEventListener('click', (e)=>{
