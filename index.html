@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 3.3</title>
+<title>MyGallery Premium 3.4</title>
 <style>
 :root {
   --accent: #4CAF50;
@@ -69,13 +69,13 @@ body.dark .fileCard { background:rgba(255,255,255,0.05); }
 .modeBtn:hover { transform: scale(1.2); box-shadow:0 0 15px #fff; }
 </style>
 </head>
-<body class="light">
+<body class="dark">
 
 <div id="sidebar">
   <h3>Galleries</h3>
   <div id="galleriesList"></div>
   <button id="addGalleryBtn">➕</button>
-  <button id="toggleMode" class="modeBtn">🌙</button>
+  <button id="toggleMode" class="modeBtn">☀️</button>
 </div>
 
 <div id="main">
@@ -194,10 +194,12 @@ toggleModeBtn.addEventListener('click',()=>{
 function generateStars(){ removeStars(); for(let i=0;i<200;i++){ const star=document.createElement('div'); star.className='star'; star.style.top=Math.random()*100+'%'; star.style.left=Math.random()*100+'%'; star.style.width=star.style.height=(Math.random()*2+1)+'px'; star.style.animationDuration=(2+Math.random()*3)+'s'; document.body.appendChild(star); } }
 function removeStars(){ document.querySelectorAll('.star').forEach(s=>s.remove()); }
 
+generateStars();
 renderGalleries(); renderGalleryFiles();
 </script>
 </body>
 </html>
+
 
 
 
