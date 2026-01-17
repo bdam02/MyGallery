@@ -216,7 +216,7 @@ uploadBtn.addEventListener('click', () => {
     const reader = new FileReader();
     reader.onload = (e) => {
       const fileURL = e.target.result;
-      // si nom écrit, on remplace le nom
+      // Remplacer le nom si on écrit quelque chose
       const name = fileNameInput.value.trim() || file.name;
 
       const fileData = { name, type: file.type, data: fileURL };
@@ -293,6 +293,7 @@ clearBtn.addEventListener('click', () => {
 </script>
 </body>
 </html>
+
 
 
 
