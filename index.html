@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 3.6</title>
+<title>MyGallery Premium 3.7</title>
 
 <style>
 body{
@@ -36,31 +36,31 @@ body{
   padding:20px;
   display:flex;
   flex-direction:column;
-  gap:16px; /* ✅ PLUS ESPACÉ */
+  gap:22px; /* ✅ PLUS ESPACÉ */
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
 }
 
 .gallery-item{
-  padding:10px 12px; /* ✅ PLUS AIR */
-  border-radius:10px;
+  padding:12px 14px; /* ✅ PLUS AIR */
+  border-radius:12px;
   cursor:pointer;
   display:flex;
   justify-content:space-between;
   align-items:center;
   font-weight:bold;
   color:white;
-  box-shadow:0 0 14px currentColor;
+  box-shadow:0 0 16px currentColor;
   transition:transform 0.25s, box-shadow 0.25s;
 }
 
 .gallery-item:hover{
-  transform:scale(1.04);
-  box-shadow:0 0 22px currentColor;
+  transform:scale(1.05);
+  box-shadow:0 0 28px currentColor;
 }
 
 .gallery-item.active{
-  box-shadow:0 0 26px currentColor;
+  box-shadow:0 0 30px currentColor;
 }
 
 .btnGroup{
@@ -74,6 +74,14 @@ body{
   color:white;
   cursor:pointer;
   font-size:14px;
+}
+
+/* ===== COUNTER ===== */
+#galleryCounter{
+  margin-top:auto;
+  text-align:center;
+  font-size:13px;
+  opacity:0.7;
 }
 
 /* ===== COLOR PICKER ===== */
@@ -203,6 +211,7 @@ input, button{
   <h3>Galleries</h3>
   <div id="galleriesList"></div>
   <button id="addGalleryBtn">➕</button>
+  <div id="galleryCounter">1 / 10</div>
 </div>
 
 <div id="main">
@@ -221,18 +230,26 @@ input, button{
 </div>
 
 <script>
+const MAX_GALLERIES = 10;
 const colors=["red","orange","yellow","green","blue","purple","pink"];
+
 let galleries=JSON.parse(localStorage.getItem("galleries")) || {
   gallery1:{files:[],color:"white"}
 };
+
 let currentGallery="gallery1";
-let openPicker=null; // ✅ pour toggle palette
+let openPicker=null;
 
 const galleriesList=document.getElementById("galleriesList");
 const galleryContainer=document.getElementById("galleryContainer");
 const fileInput=document.getElementById("fileInput");
+const counter=document.getElementById("galleryCounter");
 
 function save(){localStorage.setItem("galleries",JSON.stringify(galleries));}
+
+function updateCounter(){
+  counter.textContent = `${Object.keys(galleries).length} / ${MAX_GALLERIES}`;
+}
 
 function renderGalleries(){
   galleriesList.innerHTML="";
@@ -241,7 +258,6 @@ function renderGalleries(){
 
   for(const name in galleries){
     const g=galleries[name];
-
     const div=document.createElement("div");
     div.className="gallery-item"+(name===currentGallery?" active":"");
     div.style.color=g.color;
@@ -287,7 +303,7 @@ function renderGalleries(){
     paletteBtn.onclick=e=>{
       e.stopPropagation();
       if(openPicker===picker){
-        picker.style.display="none"; // ✅ re-clic = fermer
+        picker.style.display="none";
         openPicker=null;
         return;
       }
@@ -311,6 +327,7 @@ function renderGalleries(){
 
     galleriesList.appendChild(div);
   }
+  updateCounter();
 }
 
 function renderFiles(){
@@ -350,28 +367,11 @@ function renderFiles(){
   });
 }
 
-uploadBtn.onclick=()=>{
-  [...fileInput.files].forEach(file=>{
-    const r=new FileReader();
-    r.onload=e=>{
-      galleries[currentGallery].files.push({
-        name:file.name,type:file.type,data:e.target.result
-      });
-      save();renderFiles();
-    };
-    r.readAsDataURL(file);
-  });
-  fileInput.value="";
-};
-
-clearBtn.onclick=()=>{
-  if(confirm("Supprimer toute la galerie ?")){
-    galleries[currentGallery].files=[];
-    save();renderFiles();
-  }
-};
-
 addGalleryBtn.onclick=()=>{
+  if(Object.keys(galleries).length>=MAX_GALLERIES){
+    alert("Limite de 10 galeries atteinte");
+    return;
+  }
   const n=prompt("Nom de la nouvelle galerie :");
   if(n&&!galleries[n]){
     galleries[n]={files:[],color:"white"};
@@ -396,6 +396,7 @@ renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
