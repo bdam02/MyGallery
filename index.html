@@ -3,10 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 3.5</title>
+<title>MyGallery Premium 3.6</title>
 
 <style>
-/* ===== GLOBAL ===== */
 body{
   margin:0;
   font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
@@ -37,14 +36,14 @@ body{
   padding:20px;
   display:flex;
   flex-direction:column;
-  gap:10px;
+  gap:16px; /* ✅ PLUS ESPACÉ */
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
 }
 
 .gallery-item{
-  padding:8px 10px;
-  border-radius:8px;
+  padding:10px 12px; /* ✅ PLUS AIR */
+  border-radius:10px;
   cursor:pointer;
   display:flex;
   justify-content:space-between;
@@ -227,6 +226,7 @@ let galleries=JSON.parse(localStorage.getItem("galleries")) || {
   gallery1:{files:[],color:"white"}
 };
 let currentGallery="gallery1";
+let openPicker=null; // ✅ pour toggle palette
 
 const galleriesList=document.getElementById("galleriesList");
 const galleryContainer=document.getElementById("galleryContainer");
@@ -234,10 +234,10 @@ const fileInput=document.getElementById("fileInput");
 
 function save(){localStorage.setItem("galleries",JSON.stringify(galleries));}
 
-/* ===== GALLERIES ===== */
 function renderGalleries(){
   galleriesList.innerHTML="";
   document.querySelectorAll(".colorPicker").forEach(p=>p.remove());
+  openPicker=null;
 
   for(const name in galleries){
     const g=galleries[name];
@@ -278,6 +278,7 @@ function renderGalleries(){
         g.color=c;
         save();
         picker.style.display="none";
+        openPicker=null;
         renderGalleries();
       };
       picker.appendChild(box);
@@ -285,11 +286,17 @@ function renderGalleries(){
 
     paletteBtn.onclick=e=>{
       e.stopPropagation();
+      if(openPicker===picker){
+        picker.style.display="none"; // ✅ re-clic = fermer
+        openPicker=null;
+        return;
+      }
       document.querySelectorAll(".colorPicker").forEach(p=>p.style.display="none");
       const r=div.getBoundingClientRect();
       picker.style.top=r.top+"px";
       picker.style.left=(r.right+20)+"px";
       picker.style.display="grid";
+      openPicker=picker;
     };
 
     btnGroup.append(renameBtn,paletteBtn);
@@ -306,7 +313,6 @@ function renderGalleries(){
   }
 }
 
-/* ===== FILES ===== */
 function renderFiles(){
   galleryContainer.innerHTML="";
   galleries[currentGallery].files.forEach((f,i)=>{
@@ -344,7 +350,6 @@ function renderFiles(){
   });
 }
 
-/* ===== EVENTS ===== */
 uploadBtn.onclick=()=>{
   [...fileInput.files].forEach(file=>{
     const r=new FileReader();
@@ -366,13 +371,6 @@ clearBtn.onclick=()=>{
   }
 };
 
-searchInput.oninput=()=>{
-  const q=searchInput.value.toLowerCase();
-  document.querySelectorAll(".fileCard").forEach(c=>{
-    c.style.display=c.innerText.toLowerCase().includes(q)?"block":"none";
-  });
-};
-
 addGalleryBtn.onclick=()=>{
   const n=prompt("Nom de la nouvelle galerie :");
   if(n&&!galleries[n]){
@@ -384,7 +382,6 @@ addGalleryBtn.onclick=()=>{
 closeModal.onclick=()=>modal.style.display="none";
 modal.onclick=e=>{if(e.target===modal)modal.style.display="none";};
 
-/* ===== STARS ===== */
 for(let i=0;i<220;i++){
   const s=document.createElement("div");
   s.className="star";
@@ -399,6 +396,7 @@ renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
