@@ -61,9 +61,10 @@ body{
   box-shadow:0 0 26px currentColor;
 }
 
+/* 🔥 MODIF pour emojis collés */
 .btnGroup{
   display:flex;
-  gap:2px; /* 🔥 boutons très rapprochés */
+  gap:0; /* emojis presque collés */
 }
 
 .gallery-item button{
@@ -72,6 +73,8 @@ body{
   color:white;
   cursor:pointer;
   font-size:16px;
+  padding:0;   /* 🔥 supprime padding */
+  margin:0;    /* 🔥 supprime margin */
 }
 
 #galleryCounter{
@@ -474,6 +477,7 @@ document.getElementById("modal").onclick=e=>{if(e.target===document.getElementBy
 </script>
 </body>
 </html>
+
 
 
 
