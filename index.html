@@ -69,18 +69,19 @@ body{
   align-items:center;
   width:100%;
   min-height:48px; /* tous de la même taille */
+  max-width:100%;
   box-shadow:none;
   transition:0.25s;
   position:relative;
   z-index:1;
   border: 1px solid rgba(200,200,200,0.3);
   overflow:visible;
-  word-break:break-word; /* texte long passe à la ligne */
+  word-break:break-word;
 }
 
 .btnGroup{
   display:flex;
-  gap:1px; /* emojis très proches */
+  gap:0px; /* emojis vraiment très proches */
   overflow:visible;
 }
 
@@ -90,6 +91,16 @@ body{
   color:white;
   cursor:pointer;
   font-size:16px;
+  padding:0;
+  margin:0;
+}
+
+.galleryName{
+  flex:1;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  max-width:150px; /* max caractères pour uniformité */
 }
 
 #galleryCounter{
@@ -106,6 +117,7 @@ body{
   flex-direction:column;
   position:relative;
   overflow:hidden;
+  z-index:1;
 }
 
 #currentGalleryName{
@@ -132,6 +144,8 @@ input,button{
   overflow-y:auto; /* scroll vertical pour fichiers */
   max-height:calc(100vh - 180px);
   padding-right:6px;
+  position:relative;
+  z-index:1;
 }
 
 /* FILE CARDS */
@@ -144,6 +158,7 @@ input,button{
   transform:translateY(20px);
   opacity:0;
   transition:0.4s;
+  z-index:1;
 }
 .fileCard.show{
   transform:translateY(0);
@@ -168,6 +183,7 @@ input,button{
   color:white;
   cursor:pointer;
   font-size:12px;
+  z-index:10;
 }
 .renameBtn{left:10px;background:#2196F3}
 .deleteBtn{right:10px;background:#ff4d4d}
@@ -193,6 +209,7 @@ input,button{
   right:30px;
   font-size:36px;
   cursor:pointer;
+  z-index:1001;
 }
 
 /* USERNAME */
@@ -204,7 +221,7 @@ input,button{
   justify-content:center;
   align-items:center;
   flex-direction:column;
-  z-index:10000;
+  z-index:2000;
 }
 
 #usernameOverlay input{
@@ -232,6 +249,7 @@ input,button{
   text-shadow:0 0 12px rgba(255,255,255,0.8),0 0 28px rgba(255,255,255,0.6),0 0 44px rgba(255,255,255,0.4);
   animation:twinkleGlow 4s infinite alternate, float 6s ease-in-out infinite;
   pointer-events:none;
+  z-index:2001;
 }
 
 @keyframes float{
@@ -254,6 +272,7 @@ input,button{
   color:black;
   border-radius:14px;
   cursor:pointer;
+  z-index:2002;
 }
 .colorPicker{
   position:absolute;
@@ -344,8 +363,7 @@ function renderGalleries(){
 
     const nameDiv = document.createElement("div");
     nameDiv.textContent=name;
-    nameDiv.style.flex="1";
-    nameDiv.style.wordBreak="break-word";
+    nameDiv.className="galleryName";
 
     const btnGroup=document.createElement("div");
     btnGroup.className="btnGroup";
@@ -450,7 +468,6 @@ function renderFiles(){
   });
 }
 
-// Upload tous types de fichiers directement dans la galerie courante
 uploadBtn.onclick=()=>{
   const files = fileInput.files;
   if(!files.length) return;
@@ -517,4 +534,5 @@ modal.onclick = e => { if(e.target === modal || e.target === closeModal) modal.s
 </script>
 </body>
 </html>
+
 
