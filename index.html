@@ -329,9 +329,10 @@ input,button{
 const MAX_GALLERIES=10;
 const colors=["white","red","orange","yellow","green","blue","purple","#ff33cc"];
 let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
-let currentGallery=Object.keys(galleries)[0]; // Ouvrir directement sur la première
+let currentGallery=Object.keys(galleries)[0]; // ouvrir sur la première gallery
 let username=localStorage.getItem("username")||"";
 let openPicker=null;
+let searchValue = ""; // 🔥 ajout pour search
 
 const galleriesList=document.getElementById("galleriesList");
 const galleryContainer=document.getElementById("galleryContainer");
@@ -345,6 +346,7 @@ const usernameOverlay=document.getElementById("usernameOverlay");
 const usernameInput=document.getElementById("usernameInput");
 const usernameDisplay=document.getElementById("usernameDisplay");
 const changeUsernameBtn=document.getElementById("changeUsernameBtn");
+const searchInput=document.getElementById("searchInput"); // 🔥 ajout
 
 function save(){
   localStorage.setItem("galleries",JSON.stringify(galleries));
@@ -435,9 +437,15 @@ function renderGalleries(){
   addGalleryBtn.style.display=Object.keys(galleries).length>=MAX_GALLERIES?"none":"block";
 }
 
+// 🔥 renderFiles avec search
 function renderFiles(){
   galleryContainer.innerHTML="";
-  galleries[currentGallery].files.forEach((f,i)=>{
+  let files = galleries[currentGallery].files;
+  if(searchValue){
+    files = files.filter(f => f.name.toLowerCase().includes(searchValue));
+  }
+
+  files.forEach((f,i)=>{
     const c=document.createElement("div");
     c.className="fileCard";
     c.innerHTML=`
@@ -459,15 +467,19 @@ function renderFiles(){
       galleries[currentGallery].files.splice(i,1);
       save();renderFiles();
     };
-    c.onclick=()=>{document.getElementById("modalContent").innerHTML=f.type.startsWith("image")?`<img src="${f.data}">`:
+    c.onclick=()=>{document.getElementById("modalContent").innerHTML=
+      f.type.startsWith("image")?`<img src="${f.data}">`:
       f.type.startsWith("video")?`<video src="${f.data}" controls autoplay></video>`:
       f.type.startsWith("audio")?`<audio src="${f.data}" controls autoplay></audio>`:
-      `<div class="fileName">${f.name}</div>`; document.getElementById("modal").style.display="flex";};
+      `<div class="fileName">${f.name}</div>`;
+      document.getElementById("modal").style.display="flex";
+    };
     galleryContainer.appendChild(c);
     setTimeout(()=>c.classList.add("show"),50*i);
   });
 }
 
+// 🔥 Upload fix + multi-type
 uploadBtn.onclick=()=>{
   const files = fileInput.files;
   if(!files.length) return;
@@ -480,7 +492,7 @@ uploadBtn.onclick=()=>{
         data: e.target.result
       });
       save();
-      currentGalleryName.textContent = currentGallery; // <-- fix pour rester sur la gallery
+      currentGalleryName.textContent = currentGallery; // reste sur la même galerie
       renderFiles(); 
     };
     reader.readAsDataURL(file);
@@ -514,6 +526,12 @@ changeUsernameBtn.onclick=()=>{
   if(n){username=n.trim();save();usernameDisplay.textContent=username;}
 };
 
+// 🔥 search listener
+searchInput.oninput = () => {
+  searchValue = searchInput.value.trim().toLowerCase();
+  renderFiles();
+};
+
 for(let i=0;i<200;i++){
   const s=document.createElement("div");
   s.className="star";
@@ -526,15 +544,16 @@ for(let i=0;i<200;i++){
 renderGalleries();
 renderFiles();
 
-// Modal correction pour bouton X et click autour
+// Modal X + click autour
 const modal = document.getElementById("modal");
 const closeModal = document.getElementById("closeModal");
-
 closeModal.onclick = () => { modal.style.display = "none"; };
 modal.onclick = e => { if(e.target === modal || e.target === closeModal) modal.style.display = "none"; };
 </script>
 </body>
 </html>
+
+
 
 
 
