@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 4.0</title>
+<title>MyGallery Premium 4.1</title>
 <style>
 body{
   margin:0;
@@ -18,19 +18,19 @@ body{
 @keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:1}}
 #sidebar{width:240px;background:rgba(255,255,255,0.04);padding:20px;display:flex;flex-direction:column;gap:28px;border-right:1px solid rgba(255,255,255,0.1);z-index:2;}
 #sidebar h3{margin:0;}
-#galleriesList{display:flex;flex-direction:column;gap:26px;}
+#galleriesList{display:flex;flex-direction:column;gap:32px;} /* un peu plus espacés */
 .gallery-item{padding:14px 16px;border-radius:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:bold;color:white;box-shadow:0 0 16px currentColor;transition:transform 0.25s, box-shadow 0.25s;}
 .gallery-item:hover{transform:scale(1.04);box-shadow:0 0 26px currentColor;}
 .gallery-item.active{box-shadow:0 0 32px currentColor;}
-.btnGroup{display:flex;gap:3px;} /* boutons rapprochés */
-.gallery-item button{background:none;border:none;color:white;cursor:pointer;font-size:14px;}
+.btnGroup{display:flex;gap:1px;} /* boutons collés ensemble */
+.gallery-item button{background:none;border:none;color:white;cursor:pointer;font-size:14px;padding:4px;} /* plus compact */
 #galleryCounter{margin-top:auto;text-align:center;font-size:13px;opacity:0.7;}
 .colorPicker{position:absolute;display:none;grid-template-columns:repeat(3,18px);gap:8px;padding:10px;background:rgba(0,0,0,0.9);border-radius:12px;box-shadow:0 0 18px rgba(255,255,255,0.4);z-index:999;}
 .colorBox{width:18px;height:18px;border-radius:4px;cursor:pointer;box-shadow:0 0 6px rgba(255,255,255,0.9);}
 #main{flex:1;padding:20px;display:flex;flex-direction:column;}
 #topControls{display:flex;gap:10px;margin-bottom:20px;}
 input, button{padding:10px 14px;border-radius:10px;border:none;font-size:14px;}
-#galleryContainer{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:28px;} /* plus espacés */
+#galleryContainer{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:32px;} /* plus espacés */
 .fileCard{position:relative;background:rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;box-shadow:0 0 6px rgba(255,255,255,0.25);transform:translateY(20px);opacity:0;transition:0.4s;}
 .fileCard.show{transform:translateY(0);opacity:1;}
 .fileCard:hover{transform:translateY(-5px);box-shadow:0 15px 30px rgba(0,0,0,0.6);}
@@ -69,7 +69,7 @@ input, button{padding:10px 14px;border-radius:10px;border:none;font-size:14px;}
 
 <script>
 const MAX_GALLERIES=10;
-const colors=["white","red","orange","yellow","green","blue","purple","#ff33cc"]; // rose vif + blanc
+const colors=["white","red","orange","yellow","green","blue","purple","#ff33cc"];
 let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
 let currentGallery="gallery1";
 let openPicker=null;
@@ -157,9 +157,7 @@ function renderGalleries(){
     btnGroup.append(renameBtn,paletteBtn,deleteGalleryBtn);
     div.appendChild(btnGroup);
     document.body.appendChild(picker);
-
     div.onclick=()=>{currentGallery=name;renderGalleries();renderFiles();};
-
     galleriesList.appendChild(div);
   }
   updateCounter();
@@ -177,20 +175,16 @@ function renderFiles(){
            <button class="actionBtn renameBtn">Rename</button>
            <button class="actionBtn deleteBtn">X</button>`;
     c.innerHTML=html;
-
     c.querySelector(".renameBtn").onclick=e=>{
       e.stopPropagation();
       const n=prompt("Nouveau nom :",f.name);
       if(n){f.name=n;save();renderFiles();}
     };
-
     c.querySelector(".deleteBtn").onclick=e=>{
       e.stopPropagation();
       galleries[currentGallery].files.splice(i,1);save();renderFiles();
     };
-
     c.onclick=()=>{modalContent.innerHTML=f.type.startsWith("image")?`<img src="${f.data}">`:`<video src="${f.data}" controls autoplay></video>`;modal.style.display="flex";};
-
     galleryContainer.appendChild(c);
     setTimeout(()=>c.classList.add("show"),50*i);
   });
