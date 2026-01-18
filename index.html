@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 5.0</title>
+<title>MyGallery Premium 5.1</title>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap" rel="stylesheet">
 <style>
 body{
   margin:0;
@@ -19,10 +20,10 @@ body{
 @keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:1}}
 #sidebar{width:240px;background:rgba(255,255,255,0.04);padding:20px;display:flex;flex-direction:column;gap:28px;border-right:1px solid rgba(255,255,255,0.1);z-index:2;}
 #sidebar h3{margin:0;}
-#galleriesList{display:flex;flex-direction:column;gap:36px;}
+#galleriesList{display:flex;flex-direction:column;gap:48px;}
 .gallery-item{padding:14px 16px;border-radius:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:white;box-shadow:0 0 16px currentColor;transition:transform 0.25s, box-shadow 0.25s;}
 .gallery-item:hover{transform:scale(1.04);box-shadow:0 0 26px currentColor;}
-.gallery-item .btnGroup{display:flex;gap:2px;}
+.gallery-item .btnGroup{display:flex;gap:4px;}
 .gallery-item button{background:none;border:none;color:white;cursor:pointer;font-size:16px;padding:4px;}
 #galleryCounter{margin-top:auto;text-align:center;font-size:13px;opacity:0.7;}
 .colorPicker{position:absolute;display:none;grid-template-columns:repeat(3,20px);gap:8px;padding:10px;background:rgba(0,0,0,0.9);border-radius:12px;box-shadow:0 0 18px rgba(255,255,255,0.4);z-index:999;}
@@ -32,7 +33,7 @@ body{
 #topControls{display:flex;gap:10px;margin-bottom:20px;}
 input, button{padding:10px 14px;border-radius:10px;border:none;font-size:14px;transition:0.3s;}
 button:hover{filter:brightness(0.9);}
-#galleryContainer{display:grid;grid-template-columns:repeat(5,minmax(180px,1fr));gap:48px;}
+#galleryContainer{display:grid;grid-template-columns:repeat(5,minmax(180px,1fr));gap:64px;}
 .fileCard{position:relative;background:rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;box-shadow:0 0 6px rgba(255,255,255,0.25);transform:translateY(20px);opacity:0;transition:0.4s;}
 .fileCard.show{transform:translateY(0);opacity:1;}
 .fileCard:hover{transform:translateY(-5px);box-shadow:0 15px 30px rgba(0,0,0,0.6);}
@@ -78,34 +79,35 @@ button:hover{filter:brightness(0.9);}
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  font-size:50px;
+  font-size:60px;
   color:#fff;
-  opacity:0.15;
-  text-shadow:0 0 8px #fff,0 0 20px #fff;
-  animation:float 3s ease-in-out infinite alternate;
+  opacity:0.35;
+  text-shadow:0 0 12px #fff,0 0 28px #fff,0 0 40px #4CAF50;
+  font-family:'Orbitron', monospace;
+  animation:float 3s ease-in-out infinite alternate, glow 2s ease-in-out infinite alternate;
   pointer-events:none;
 }
-@keyframes float{0%{transform:translate(-50%,-50%) translateY(0px);}100%{transform:translate(-50%,-50%) translateY(10px);}}
+@keyframes float{0%{transform:translate(-50%,-50%) translateY(0px);}100%{transform:translate(-50%,-50%) translateY(12px);}}
+@keyframes glow{0%{text-shadow:0 0 12px #fff,0 0 28px #fff,0 0 40px #4CAF50;}50%{text-shadow:0 0 16px #fff,0 0 36px #fff,0 0 48px #4CAF50;}100%{text-shadow:0 0 12px #fff,0 0 28px #fff,0 0 40px #4CAF50;}}
 @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
 
 #changeUsernameBtn{
   position:absolute;
   top:20px;
   right:20px;
-  font-size:18px;
+  font-size:16px;
   padding:8px 12px;
-  background:linear-gradient(45deg,#2196F3,#4CAF50);
+  background:white;
   border:none;
   border-radius:12px;
   cursor:pointer;
-  box-shadow:0 0 20px rgba(255,255,255,0.6);
-  color:#fff;
+  color:black;
   font-weight:bold;
   transition:0.3s;
 }
 #changeUsernameBtn:hover{
   transform:scale(1.05);
-  box-shadow:0 0 28px rgba(255,255,255,0.8);
+  box-shadow:0 0 16px white;
 }
 </style>
 </head>
@@ -124,7 +126,7 @@ button:hover{filter:brightness(0.9);}
     <input type="file" id="fileInput" multiple>
     <button id="uploadBtn">Upload</button>
     <button id="clearBtn">Clear Gallery</button>
-    <input type="text" id="searchInput" placeholder="Rechercher...">
+    <input type="text" id="searchInput" placeholder="Search...">
   </div>
   <div id="galleryContainer"></div>
 </div>
@@ -135,12 +137,13 @@ button:hover{filter:brightness(0.9);}
 </div>
 
 <div id="usernameOverlay">
-  <h2>Entre ton username :</h2>
-  <input type="text" id="usernameInput" placeholder="Ton pseudo">
+  <h2>Enter your username:</h2>
+  <input type="text" id="usernameInput" placeholder="Your username">
 </div>
 <div id="usernameDisplay"></div>
 
 <script>
+// ===== VARIABLES =====
 const MAX_GALLERIES=10;
 const colors=["white","red","orange","yellow","green","blue","purple","#ff33cc"];
 let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
@@ -164,6 +167,7 @@ const usernameInput=document.getElementById("usernameInput");
 const usernameDisplay=document.getElementById("usernameDisplay");
 const changeUsernameBtn=document.getElementById("changeUsernameBtn");
 
+// ===== FUNCTIONS =====
 function save(){localStorage.setItem("galleries",JSON.stringify(galleries));localStorage.setItem("username",username);}
 function updateCounter(){counter.textContent=`${Object.keys(galleries).length} / ${MAX_GALLERIES}`; addGalleryBtn.style.display=Object.keys(galleries).length>=MAX_GALLERIES?"none":"block";}
 function updateCurrentGalleryName(){currentGalleryName.textContent=currentGallery;}
@@ -187,7 +191,7 @@ function renderGalleries(){
     renameBtn.textContent="✏️";
     renameBtn.onclick=e=>{
       e.stopPropagation();
-      const n=prompt("Nouveau nom :",name);
+      const n=prompt("New name:",name);
       if(n&&!galleries[n]){
         galleries[n]=galleries[name];
         delete galleries[name];
@@ -200,7 +204,7 @@ function renderGalleries(){
     deleteGalleryBtn.textContent="🗑️";
     deleteGalleryBtn.onclick=e=>{
       e.stopPropagation();
-      if(confirm("Supprimer cette galerie ?")){
+      if(confirm("Delete this gallery?")){
         delete galleries[name];
         if(currentGallery===name)currentGallery=Object.keys(galleries)[0]||"gallery1";
         save();renderGalleries();renderFiles();updateCurrentGalleryName();
@@ -259,7 +263,7 @@ function renderFiles(){
     c.innerHTML=html;
     c.querySelector(".renameBtn").onclick=e=>{
       e.stopPropagation();
-      const n=prompt("Nouveau nom :",f.name);
+      const n=prompt("New name:",f.name);
       if(n){f.name=n;save();renderFiles();}
     };
     c.querySelector(".deleteBtn").onclick=e=>{
@@ -272,9 +276,10 @@ function renderFiles(){
   });
 }
 
+// ===== UPLOAD =====
 uploadBtn.onclick=()=>{
   const files=[...fileInput.files];
-  if(files.length===0){alert("Sélectionne des fichiers");return;}
+  if(files.length===0){alert("Select files");return;}
   files.forEach(file=>{
     const reader=new FileReader();
     reader.onload=e=>{
@@ -286,21 +291,22 @@ uploadBtn.onclick=()=>{
   fileInput.value="";
 };
 
-clearBtn.onclick=()=>{if(confirm("Supprimer toute la galerie ?")){galleries[currentGallery].files=[];save();renderFiles();}};
+clearBtn.onclick=()=>{if(confirm("Clear the gallery?")){galleries[currentGallery].files=[];save();renderFiles();}};
 addGalleryBtn.onclick=()=>{
-  if(Object.keys(galleries).length>=MAX_GALLERIES){alert("Limite atteinte");return;}
-  const n=prompt("Nom de la nouvelle galerie :");
+  if(Object.keys(galleries).length>=MAX_GALLERIES){alert("Max galleries reached");return;}
+  const n=prompt("New gallery name:");
   if(n&&!galleries[n]){galleries[n]={files:[],color:"white"};save();renderGalleries();}
 };
 
 closeModal.onclick=()=>modal.style.display="none";
 modal.onclick=e=>{if(e.target===modal)modal.style.display="none";}
 
-/* ===== STARS ===== */
+// ===== STARS =====
 for(let i=0;i<220;i++){const s=document.createElement("div");s.className="star";s.style.top=Math.random()*100+"%";s.style.left=Math.random()*100+"%";s.style.width=s.style.height=(Math.random()*2+1)+"px";document.body.appendChild(s);}
 
-/* ===== USERNAME ===== */
-if(username){usernameOverlay.style.display="none";updateUsernameDisplay();}else{usernameOverlay.style.display="flex";}
+// ===== USERNAME =====
+if(username){usernameOverlay.style.display="none";updateUsernameDisplay();}
+else{usernameOverlay.style.display="flex";}
 usernameInput.onkeydown=e=>{
   if(e.key==="Enter" && usernameInput.value.trim()!==""){
     username=usernameInput.value.trim();
@@ -310,7 +316,7 @@ usernameInput.onkeydown=e=>{
   }
 };
 changeUsernameBtn.onclick=()=>{
-  const n=prompt("Nouveau username :",username);
+  const n=prompt("New username:",username);
   if(n){username=n.trim();save();updateUsernameDisplay();}
 };
 
@@ -318,6 +324,7 @@ renderGalleries();renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
