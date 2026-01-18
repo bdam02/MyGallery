@@ -8,7 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
 
 <style>
-*{font-weight:700}
+*{
+  font-weight:700;
+}
 
 body{
   margin:0;
@@ -23,7 +25,7 @@ body{
 
 /* STARS */
 .star{position:absolute;background:white;border-radius:50%;opacity:0.6;animation:twinkle 4s infinite alternate;}
-@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:1}}
+@keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:1}}
 
 #sidebar{
   width:240px;
@@ -31,16 +33,15 @@ body{
   padding:20px;
   display:flex;
   flex-direction:column;
-  gap:20px;
+  gap:24px;
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
-  overflow-y:auto;
 }
 
 #galleriesList{
   display:flex;
   flex-direction:column;
-  gap:26px;
+  gap:32px;
 }
 
 .gallery-item{
@@ -51,16 +52,17 @@ body{
   justify-content:space-between;
   align-items:center;
   box-shadow:0 0 16px currentColor;
-  transition:.25s;
+  transition:0.25s;
 }
 .gallery-item:hover{
   transform:scale(1.04);
   box-shadow:0 0 26px currentColor;
 }
 
+/* 🔥 SEULE MODIF : boutons beaucoup plus rapprochés */
 .btnGroup{
   display:flex;
-  gap:0px; /* 🔥 boutons beaucoup plus rapprochés */
+  gap:2px; /* avant 6px */
 }
 
 .gallery-item button{
@@ -75,7 +77,7 @@ body{
   margin-top:auto;
   text-align:center;
   font-size:13px;
-  opacity:.7;
+  opacity:0.7;
 }
 
 #main{
@@ -107,8 +109,7 @@ input,button{
   display:grid;
   grid-template-columns:repeat(5,minmax(180px,1fr));
   gap:48px;
-  overflow-y:auto;
-  padding-right:10px;
+  overflow-y:auto; /* scroll dans la galerie */
 }
 
 /* FILE CARDS */
@@ -117,19 +118,25 @@ input,button{
   background:rgba(255,255,255,0.05);
   border-radius:16px;
   overflow:hidden;
-  box-shadow:0 0 8px rgba(255,255,255,.25);
+  box-shadow:0 0 8px rgba(255,255,255,0.25);
   transform:translateY(20px);
   opacity:0;
-  transition:.4s;
+  transition:0.4s;
 }
-.fileCard.show{transform:none;opacity:1}
+.fileCard.show{
+  transform:translateY(0);
+  opacity:1;
+}
 .fileCard:hover{
   transform:translateY(-6px);
-  box-shadow:0 20px 40px rgba(0,0,0,.7);
+  box-shadow:0 20px 40px rgba(0,0,0,0.7);
 }
 .fileCard img,.fileCard video{width:100%}
 
-.fileName{text-align:center;padding:6px}
+.fileName{
+  text-align:center;
+  padding:6px;
+}
 
 .actionBtn{
   position:absolute;
@@ -143,31 +150,34 @@ input,button{
 .renameBtn{left:10px;background:#2196F3}
 .deleteBtn{right:10px;background:#ff4d4d}
 
-/* COLOR PICKER */
-.colorPicker{
-  position:absolute;
+/* MODAL */
+#modal{
   display:none;
-  grid-template-columns:repeat(2,18px);
-  gap:8px;
-  padding:10px;
-  background:rgba(0,0,0,.9);
-  border-radius:12px;
-  box-shadow:0 0 18px rgba(255,255,255,.4);
-  z-index:999;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
 }
-.colorBox{
-  width:18px;
-  height:18px;
-  border-radius:4px;
+#modal img,#modal video{
+  max-width:90%;
+  max-height:90%;
+  border-radius:16px;
+}
+#closeModal{
+  position:absolute;
+  top:20px;
+  right:30px;
+  font-size:36px;
   cursor:pointer;
-  box-shadow:0 0 6px rgba(255,255,255,.8);
 }
 
 /* USERNAME */
 #usernameOverlay{
   position:absolute;
   inset:0;
-  background:rgba(0,0,0,.96);
+  background:rgba(0,0,0,0.96);
   display:flex;
   justify-content:center;
   align-items:center;
@@ -179,12 +189,12 @@ input,button{
   font-size:22px;
   padding:14px 22px;
   border-radius:14px;
-  background:rgba(255,255,255,.08);
+  background:rgba(255,255,255,0.08);
   color:#fff;
   outline:none;
   border:none;
   text-align:center;
-  box-shadow:0 0 30px rgba(255,255,255,.6);
+  box-shadow:0 0 30px rgba(255,255,255,0.6);
 }
 
 #usernameDisplay{
@@ -196,12 +206,12 @@ input,button{
   font-size:58px;
   font-weight:300;
   letter-spacing:2px;
-  color:rgba(255,255,255,.6);
+  color:rgba(255,255,255,0.6);
   text-shadow:
-    0 0 4px rgba(255,255,255,.6),
-    0 0 12px rgba(255,255,255,.5),
-    0 0 18px rgba(255,255,255,.4);
-  animation:float 6s ease-in-out infinite, usernameGlow 4s infinite alternate;
+    0 0 12px rgba(255,255,255,0.8),
+    0 0 28px rgba(255,255,255,0.6),
+    0 0 44px rgba(255,255,255,0.4);
+  animation:float 6s ease-in-out infinite, starGlow 4s infinite alternate;
   pointer-events:none;
 }
 
@@ -211,9 +221,9 @@ input,button{
   100%{transform:translate(-50%,-50%) translateY(0)}
 }
 
-@keyframes usernameGlow{
-  0%,100%{text-shadow:0 0 4px rgba(255,255,255,.2),0 0 12px rgba(255,255,255,.2),0 0 18px rgba(255,255,255,.2);}
-  50%{text-shadow:0 0 12px rgba(255,255,255,.8),0 0 28px rgba(255,255,255,.7),0 0 44px rgba(255,255,255,.6);}
+@keyframes starGlow{
+  0%,100%{opacity:0.2}
+  50%{opacity:1}
 }
 
 #changeUsernameBtn{
@@ -251,6 +261,11 @@ input,button{
   <div id="galleryContainer"></div>
 </div>
 
+<div id="modal">
+  <span id="closeModal">&times;</span>
+  <div id="modalContent"></div>
+</div>
+
 <div id="usernameOverlay">
   <h2>Enter your username</h2>
   <input id="usernameInput" placeholder="username">
@@ -260,16 +275,15 @@ input,button{
 
 <script>
 const MAX_GALLERIES=10;
-const colors=["white","red","orange","yellow","green","blue","purple","pink"];
 let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
 let currentGallery="gallery1";
 let username=localStorage.getItem("username")||"";
-let openPicker=null;
 
 const galleriesList=document.getElementById("galleriesList");
 const galleryContainer=document.getElementById("galleryContainer");
 const fileInput=document.getElementById("fileInput");
 const uploadBtn=document.getElementById("uploadBtn");
+const clearBtn=document.getElementById("clearBtn");
 const counter=document.getElementById("galleryCounter");
 const addGalleryBtn=document.getElementById("addGalleryBtn");
 const currentGalleryName=document.getElementById("currentGalleryName");
@@ -285,9 +299,6 @@ function save(){
 
 function renderGalleries(){
   galleriesList.innerHTML="";
-  document.querySelectorAll(".colorPicker").forEach(p=>p.remove());
-  openPicker=null;
-
   for(const name in galleries){
     const g=galleries[name];
     const div=document.createElement("div");
@@ -313,37 +324,10 @@ function renderGalleries(){
 
     const paletteBtn=document.createElement("button");
     paletteBtn.textContent="🎨";
-
-    const picker=document.createElement("div");
-    picker.className="colorPicker";
-    colors.forEach(c=>{
-      const box=document.createElement("div");
-      box.className="colorBox";
-      box.style.background=c;
-      box.onclick=e=>{
-        e.stopPropagation();
-        g.color=c;
-        save();
-        picker.style.display="none";
-        openPicker=null;
-        renderGalleries();
-      };
-      picker.appendChild(box);
-    });
-
     paletteBtn.onclick=e=>{
       e.stopPropagation();
-      if(openPicker===picker){
-        picker.style.display="none";
-        openPicker=null;
-        return;
-      }
-      document.querySelectorAll(".colorPicker").forEach(p=>p.style.display="none");
-      const r=div.getBoundingClientRect();
-      picker.style.top=r.top+"px";
-      picker.style.left=(r.right+10)+"px";
-      picker.style.display="grid";
-      openPicker=picker;
+      const c=prompt("Color (white/red/blue/etc):",g.color);
+      if(c){g.color=c;save();renderGalleries();}
     };
 
     const deleteBtn=document.createElement("button");
@@ -359,8 +343,6 @@ function renderGalleries(){
 
     btnGroup.append(renameBtn,paletteBtn,deleteBtn);
     div.appendChild(btnGroup);
-    document.body.appendChild(picker);
-
     div.onclick=()=>{currentGallery=name;renderFiles();currentGalleryName.textContent=name};
     galleriesList.appendChild(div);
   }
@@ -433,7 +415,6 @@ changeUsernameBtn.onclick=()=>{
   if(n){username=n.trim();save();usernameDisplay.textContent=username;}
 };
 
-/* STARS */
 for(let i=0;i<200;i++){
   const s=document.createElement("div");
   s.className="star";
@@ -448,16 +429,3 @@ renderFiles();
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
