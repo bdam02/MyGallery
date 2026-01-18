@@ -68,7 +68,7 @@ body{
   justify-content:space-between;
   align-items:center;
   width:100%;
-  min-height:48px; /* tous de la même taille */
+  min-height:48px;
   max-width:100%;
   box-shadow:none;
   transition:0.25s;
@@ -100,7 +100,7 @@ body{
   white-space:nowrap;
   overflow:hidden;
   text-overflow:ellipsis;
-  max-width:150px; /* max caractères pour uniformité */
+  max-width:150px;
 }
 
 #galleryCounter{
@@ -329,7 +329,7 @@ input,button{
 const MAX_GALLERIES=10;
 const colors=["white","red","orange","yellow","green","blue","purple","#ff33cc"];
 let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
-let currentGallery="gallery1";
+let currentGallery=Object.keys(galleries)[0]; // Ouvrir directement sur la première
 let username=localStorage.getItem("username")||"";
 let openPicker=null;
 
@@ -480,7 +480,7 @@ uploadBtn.onclick=()=>{
         data: e.target.result
       });
       save();
-      renderFiles();
+      renderFiles(); // reste bien dans la gallery actuelle
     };
     reader.readAsDataURL(file);
   });
@@ -534,5 +534,6 @@ modal.onclick = e => { if(e.target === modal || e.target === closeModal) modal.s
 </script>
 </body>
 </html>
+
 
 
