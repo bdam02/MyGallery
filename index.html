@@ -3,11 +3,15 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 5.1</title>
+<title>MyGallery Premium 5.2</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
 
 <style>
+*{
+  font-weight:700;
+}
+
 body{
   margin:0;
   font-family:'Segoe UI',Tahoma,Verdana,sans-serif;
@@ -29,26 +33,51 @@ body{
   padding:20px;
   display:flex;
   flex-direction:column;
-  gap:28px;
+  gap:24px;
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
 }
-#galleriesList{display:flex;flex-direction:column;gap:52px;}
+
+#galleriesList{
+  display:flex;
+  flex-direction:column;
+  gap:32px;
+}
+
 .gallery-item{
-  padding:14px 16px;
+  padding:12px 14px;
   border-radius:14px;
   cursor:pointer;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  box-shadow:0 0 18px currentColor;
+  box-shadow:0 0 16px currentColor;
   transition:0.25s;
 }
-.gallery-item:hover{transform:scale(1.04);box-shadow:0 0 28px currentColor;}
-.btnGroup{display:flex;gap:6px;}
-.gallery-item button{background:none;border:none;color:white;cursor:pointer}
+.gallery-item:hover{
+  transform:scale(1.04);
+  box-shadow:0 0 26px currentColor;
+}
 
-#galleryCounter{margin-top:auto;text-align:center;font-size:13px;opacity:0.7}
+.btnGroup{
+  display:flex;
+  gap:6px;
+}
+
+.gallery-item button{
+  background:none;
+  border:none;
+  color:white;
+  cursor:pointer;
+  font-size:16px;
+}
+
+#galleryCounter{
+  margin-top:auto;
+  text-align:center;
+  font-size:13px;
+  opacity:0.7;
+}
 
 #main{
   flex:1;
@@ -57,19 +86,31 @@ body{
   flex-direction:column;
   position:relative;
 }
-#currentGalleryName{font-size:24px;margin-bottom:14px;font-weight:bold;}
 
-#topControls{display:flex;gap:10px;margin-bottom:20px;}
-input,button{padding:10px 14px;border-radius:10px;border:none}
-button:hover{filter:brightness(0.9)}
+#currentGalleryName{
+  font-size:24px;
+  margin-bottom:14px;
+}
+
+#topControls{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+input,button{
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+}
 
 #galleryContainer{
   display:grid;
   grid-template-columns:repeat(5,minmax(180px,1fr));
-  gap:64px;
+  gap:48px;
 }
 
-/* FILES */
+/* FILE CARDS */
 .fileCard{
   position:relative;
   background:rgba(255,255,255,0.05);
@@ -80,21 +121,57 @@ button:hover{filter:brightness(0.9)}
   opacity:0;
   transition:0.4s;
 }
-.fileCard.show{transform:translateY(0);opacity:1}
-.fileCard:hover{transform:translateY(-6px);box-shadow:0 20px 40px rgba(0,0,0,0.7)}
+.fileCard.show{
+  transform:translateY(0);
+  opacity:1;
+}
+.fileCard:hover{
+  transform:translateY(-6px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.7);
+}
 .fileCard img,.fileCard video{width:100%}
-.fileName{text-align:center;padding:6px}
 
-.actionBtn{position:absolute;top:10px;padding:4px 8px;border-radius:6px;color:white;cursor:pointer}
+.fileName{
+  text-align:center;
+  padding:6px;
+}
+
+.actionBtn{
+  position:absolute;
+  top:10px;
+  padding:4px 8px;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+  font-size:12px;
+}
 .renameBtn{left:10px;background:#2196F3}
 .deleteBtn{right:10px;background:#ff4d4d}
 
 /* MODAL */
-#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:1000}
-#modal img,#modal video{max-width:90%;max-height:90%;border-radius:16px}
-#closeModal{position:absolute;top:20px;right:30px;font-size:36px;cursor:pointer}
+#modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+#modal img,#modal video{
+  max-width:90%;
+  max-height:90%;
+  border-radius:16px;
+}
+#closeModal{
+  position:absolute;
+  top:20px;
+  right:30px;
+  font-size:36px;
+  cursor:pointer;
+}
 
-/* ===== USERNAME OVERLAY ===== */
+/* USERNAME */
 #usernameOverlay{
   position:absolute;
   inset:0;
@@ -105,7 +182,7 @@ button:hover{filter:brightness(0.9)}
   flex-direction:column;
   z-index:10000;
 }
-#usernameOverlay h2{font-weight:300;margin-bottom:14px}
+
 #usernameOverlay input{
   font-size:22px;
   padding:14px 22px;
@@ -118,7 +195,6 @@ button:hover{filter:brightness(0.9)}
   box-shadow:0 0 30px rgba(255,255,255,0.6);
 }
 
-/* ===== GLASS NEON USERNAME ===== */
 #usernameDisplay{
   position:absolute;
   top:50%;
@@ -126,24 +202,23 @@ button:hover{filter:brightness(0.9)}
   transform:translate(-50%,-50%);
   font-family:'Montserrat',sans-serif;
   font-size:58px;
-  font-weight:300;
+  font-weight:300; /* NOT BOLD */
   letter-spacing:2px;
-  color:rgba(255,255,255,0.55);
-  backdrop-filter:blur(6px);
+  color:rgba(255,255,255,0.6);
   text-shadow:
-    0 0 10px rgba(255,255,255,0.4),
-    0 0 22px rgba(100,255,200,0.6),
-    0 0 40px rgba(100,255,200,0.4);
-  animation:glassFloat 7s ease-in-out infinite;
+    0 0 12px rgba(255,255,255,0.8),
+    0 0 28px rgba(255,255,255,0.6),
+    0 0 44px rgba(255,255,255,0.4);
+  animation:float 6s ease-in-out infinite;
   pointer-events:none;
 }
-@keyframes glassFloat{
+
+@keyframes float{
   0%{transform:translate(-50%,-50%) translateY(0)}
-  50%{transform:translate(-50%,-50%) translateY(5px)}
+  50%{transform:translate(-50%,-50%) translateY(4px)}
   100%{transform:translate(-50%,-50%) translateY(0)}
 }
 
-/* CHANGE USERNAME BTN */
 #changeUsernameBtn{
   position:absolute;
   top:20px;
@@ -153,9 +228,7 @@ button:hover{filter:brightness(0.9)}
   color:black;
   border-radius:14px;
   cursor:pointer;
-  font-weight:600;
 }
-#changeUsernameBtn:hover{box-shadow:0 0 18px white;transform:scale(1.05)}
 </style>
 </head>
 <body>
@@ -211,31 +284,64 @@ const usernameOverlay=document.getElementById("usernameOverlay");
 const usernameInput=document.getElementById("usernameInput");
 const usernameDisplay=document.getElementById("usernameDisplay");
 const changeUsernameBtn=document.getElementById("changeUsernameBtn");
-const modal=document.getElementById("modal");
-const modalContent=document.getElementById("modalContent");
-const closeModal=document.getElementById("closeModal");
 
 function save(){
   localStorage.setItem("galleries",JSON.stringify(galleries));
   localStorage.setItem("username",username);
 }
 
-function updateCounter(){
-  const c=Object.keys(galleries).length;
-  counter.textContent=`${c} / ${MAX_GALLERIES}`;
-  addGalleryBtn.style.display=c>=MAX_GALLERIES?"none":"block";
-}
-
 function renderGalleries(){
   galleriesList.innerHTML="";
-  for(const g in galleries){
-    const d=document.createElement("div");
-    d.className="gallery-item";
-    d.textContent=g;
-    d.onclick=()=>{currentGallery=g;renderFiles();currentGalleryName.textContent=g};
-    galleriesList.appendChild(d);
+  for(const name in galleries){
+    const g=galleries[name];
+    const div=document.createElement("div");
+    div.className="gallery-item";
+    div.style.color=g.color;
+    div.textContent=name;
+
+    const btnGroup=document.createElement("div");
+    btnGroup.className="btnGroup";
+
+    const renameBtn=document.createElement("button");
+    renameBtn.textContent="✏️";
+    renameBtn.onclick=e=>{
+      e.stopPropagation();
+      const n=prompt("New name:",name);
+      if(n&&!galleries[n]){
+        galleries[n]=galleries[name];
+        delete galleries[name];
+        currentGallery=n;
+        save();renderGalleries();renderFiles();
+      }
+    };
+
+    const paletteBtn=document.createElement("button");
+    paletteBtn.textContent="🎨";
+    paletteBtn.onclick=e=>{
+      e.stopPropagation();
+      const c=prompt("Color (white/red/blue/etc):",g.color);
+      if(c){g.color=c;save();renderGalleries();}
+    };
+
+    const deleteBtn=document.createElement("button");
+    deleteBtn.textContent="🗑️";
+    deleteBtn.onclick=e=>{
+      e.stopPropagation();
+      if(confirm("Delete gallery?")){
+        delete galleries[name];
+        currentGallery=Object.keys(galleries)[0];
+        save();renderGalleries();renderFiles();
+      }
+    };
+
+    btnGroup.append(renameBtn,paletteBtn,deleteBtn);
+    div.appendChild(btnGroup);
+    div.onclick=()=>{currentGallery=name;renderFiles();currentGalleryName.textContent=name};
+    galleriesList.appendChild(div);
   }
-  updateCounter();
+
+  counter.textContent=`${Object.keys(galleries).length} / ${MAX_GALLERIES}`;
+  addGalleryBtn.style.display=Object.keys(galleries).length>=MAX_GALLERIES?"none":"block";
 }
 
 function renderFiles(){
@@ -243,16 +349,27 @@ function renderFiles(){
   galleries[currentGallery].files.forEach((f,i)=>{
     const c=document.createElement("div");
     c.className="fileCard";
-    c.innerHTML=(f.type.startsWith("image")?
-      `<img src="${f.data}">`:
-      `<video src="${f.data}" controls></video>`) +
-      `<div class="fileName">${f.name}</div>`;
+    c.innerHTML=`
+      ${f.type.startsWith("image")?`<img src="${f.data}">`:`<video src="${f.data}" controls></video>`}
+      <div class="fileName">${f.name}</div>
+      <button class="actionBtn renameBtn">Rename</button>
+      <button class="actionBtn deleteBtn">X</button>
+    `;
+    c.querySelector(".renameBtn").onclick=e=>{
+      e.stopPropagation();
+      const n=prompt("New name:",f.name);
+      if(n){f.name=n;save();renderFiles();}
+    };
+    c.querySelector(".deleteBtn").onclick=e=>{
+      e.stopPropagation();
+      galleries[currentGallery].files.splice(i,1);
+      save();renderFiles();
+    };
     galleryContainer.appendChild(c);
     setTimeout(()=>c.classList.add("show"),50*i);
   });
 }
 
-/* FIXED UPLOAD */
 uploadBtn.onclick=()=>{
   [...fileInput.files].forEach(file=>{
     const r=new FileReader();
@@ -265,7 +382,6 @@ uploadBtn.onclick=()=>{
   fileInput.value="";
 };
 
-/* FIXED ADD GALLERY */
 addGalleryBtn.onclick=()=>{
   if(Object.keys(galleries).length>=MAX_GALLERIES)return;
   const n=prompt("New gallery name:");
@@ -275,7 +391,6 @@ addGalleryBtn.onclick=()=>{
   }
 };
 
-/* USERNAME */
 if(username){
   usernameOverlay.style.display="none";
   usernameDisplay.textContent=username;
@@ -293,8 +408,7 @@ changeUsernameBtn.onclick=()=>{
   if(n){username=n.trim();save();usernameDisplay.textContent=username;}
 };
 
-/* STARS */
-for(let i=0;i<220;i++){
+for(let i=0;i<200;i++){
   const s=document.createElement("div");
   s.className="star";
   s.style.top=Math.random()*100+"%";
@@ -308,6 +422,7 @@ renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
