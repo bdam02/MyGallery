@@ -36,13 +36,14 @@ body{
   gap:24px;
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
+  overflow:hidden;
 }
 
 #galleriesList{
   display:flex;
   flex-direction:column;
   gap:32px;
-  overflow-y:auto; /* scrollable */
+  overflow-y:hidden; /* plus de scroll individuel */
 }
 
 .gallery-item{
@@ -55,15 +56,18 @@ body{
   box-shadow:0 0 16px currentColor;
   transition:0.25s;
   width:auto;
+  position:relative;
+  z-index:1;
 }
 .gallery-item:hover{
   transform:scale(1.04);
   box-shadow:0 0 26px currentColor;
+  z-index:10; /* boutons passent par dessus */
 }
 
 .btnGroup{
   display:flex;
-  gap:2px; /* 🔥 boutons très rapprochés */
+  gap:2px; 
 }
 
 .gallery-item button{
@@ -72,6 +76,10 @@ body{
   color:white;
   cursor:pointer;
   font-size:16px;
+}
+
+.gallery-item button:hover{
+  text-shadow:0 0 12px white; /* mini glow */
 }
 
 #galleryCounter{
@@ -87,6 +95,7 @@ body{
   display:flex;
   flex-direction:column;
   position:relative;
+  overflow:hidden;
 }
 
 #currentGalleryName{
@@ -110,7 +119,7 @@ input,button{
   display:grid;
   grid-template-columns:repeat(5,minmax(180px,1fr));
   gap:48px;
-  overflow-y:auto;
+  overflow-y:auto; /* scroll uniquement ici */
   max-height:calc(100vh - 180px);
 }
 
@@ -133,7 +142,7 @@ input,button{
   transform:translateY(-6px);
   box-shadow:0 20px 40px rgba(0,0,0,0.7);
 }
-.fileCard img,.fileCard video{width:100%}
+.fileCard img,.fileCard video,.fileCard audio{width:100%;}
 
 .fileName{
   text-align:center;
@@ -162,7 +171,7 @@ input,button{
   align-items:center;
   z-index:1000;
 }
-#modal img,#modal video{
+#modal img,#modal video,#modal audio{
   max-width:90%;
   max-height:90%;
   border-radius:16px;
@@ -398,7 +407,10 @@ function renderFiles(){
     const c=document.createElement("div");
     c.className="fileCard";
     c.innerHTML=`
-      ${f.type.startsWith("image")?`<img src="${f.data}">`:`<video src="${f.data}" controls></video>`}
+      ${f.type.startsWith("image")?`<img src="${f.data}">`:
+      f.type.startsWith("video")?`<video src="${f.data}" controls></video>`:
+      f.type.startsWith("audio")?`<audio src="${f.data}" controls></audio>`:
+      `<div class="fileName">${f.name}</div>`}
       <div class="fileName">${f.name}</div>
       <button class="actionBtn renameBtn">Rename</button>
       <button class="actionBtn deleteBtn">X</button>
@@ -413,13 +425,16 @@ function renderFiles(){
       galleries[currentGallery].files.splice(i,1);
       save();renderFiles();
     };
-    c.onclick=()=>{document.getElementById("modalContent").innerHTML=f.type.startsWith("image")?`<img src="${f.data}">`:`<video src="${f.data}" controls autoplay></video>`;document.getElementById("modal").style.display="flex";};
+    c.onclick=()=>{document.getElementById("modalContent").innerHTML=f.type.startsWith("image")?`<img src="${f.data}">`:
+      f.type.startsWith("video")?`<video src="${f.data}" controls autoplay></video>`:
+      f.type.startsWith("audio")?`<audio src="${f.data}" controls autoplay></audio>`:
+      `<div class="fileName">${f.name}</div>`; document.getElementById("modal").style.display="flex";};
     galleryContainer.appendChild(c);
     setTimeout(()=>c.classList.add("show"),50*i);
   });
 }
 
-// ✅ Correction du bouton upload
+// ✅ Upload corrigé pour tous types de fichiers
 uploadBtn.onclick=()=>{
   const files = fileInput.files;
   if(!files.length) return;
@@ -428,7 +443,7 @@ uploadBtn.onclick=()=>{
     reader.onload = e => {
       galleries[currentGallery].files.push({
         name: file.name,
-        type: file.type,
+        type: file.type || "unknown",
         data: e.target.result
       });
       save();
@@ -436,7 +451,7 @@ uploadBtn.onclick=()=>{
     };
     reader.readAsDataURL(file);
   });
-  fileInput.value=""; // reset input
+  fileInput.value="";
 };
 
 addGalleryBtn.onclick=()=>{
@@ -482,5 +497,6 @@ document.getElementById("modal").onclick=e=>{if(e.target===document.getElementBy
 </script>
 </body>
 </html>
+
 
 
