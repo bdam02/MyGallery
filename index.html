@@ -41,24 +41,42 @@ body{
 #galleriesList{
   display:flex;
   flex-direction:column;
-  gap:32px;
+  gap:16px; /* un peu plus serré */
   overflow-y:auto; /* scrollable */
 }
 
+/* cacher les scrollbars laides */
+#galleriesList::-webkit-scrollbar,
+#galleryContainer::-webkit-scrollbar {
+  width:6px;
+  height:6px;
+}
+#galleriesList::-webkit-scrollbar-thumb,
+#galleryContainer::-webkit-scrollbar-thumb {
+  background:rgba(255,255,255,0.3);
+  border-radius:3px;
+}
+#galleriesList::-webkit-scrollbar-track,
+#galleryContainer::-webkit-scrollbar-track {
+  background:transparent;
+}
+
 .gallery-item{
-  padding:12px 14px;
-  border-radius:14px;
+  padding:10px 12px;               
+  border-radius:12px;
   cursor:pointer;
   display:flex;
   justify-content:space-between;
   align-items:center;
-  box-shadow:0 0 16px currentColor;
-  transition:0.25s;
-  width:auto; /* compact comme avant */
+  background:rgba(255,255,255,0.03); /* léger fond */
+  transition:0.3s;
+  width:auto;
+  box-shadow:none; /* plus de glow */
 }
+
 .gallery-item:hover{
-  transform:scale(1.04);
-  box-shadow:0 0 26px currentColor;
+  transform:scale(1.05);
+  background:rgba(255,255,255,0.06); /* hover subtil */
 }
 
 /* 🔥 MODIF pour emojis collés */
@@ -73,8 +91,8 @@ body{
   color:white;
   cursor:pointer;
   font-size:16px;
-  padding:0;   /* 🔥 supprime padding */
-  margin:0;    /* 🔥 supprime margin */
+  padding:0;   
+  margin:0;    
 }
 
 #galleryCounter{
@@ -477,6 +495,7 @@ document.getElementById("modal").onclick=e=>{if(e.target===document.getElementBy
 </script>
 </body>
 </html>
+
 
 
 
