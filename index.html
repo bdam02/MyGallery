@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 4.4</title>
+<title>MyGallery Premium 5.0</title>
 <style>
 body{
   margin:0;
@@ -22,16 +22,17 @@ body{
 #galleriesList{display:flex;flex-direction:column;gap:36px;}
 .gallery-item{padding:14px 16px;border-radius:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;color:white;box-shadow:0 0 16px currentColor;transition:transform 0.25s, box-shadow 0.25s;}
 .gallery-item:hover{transform:scale(1.04);box-shadow:0 0 26px currentColor;}
-.gallery-item .btnGroup{display:flex;gap:1px;}
-.gallery-item button{background:none;border:none;color:white;cursor:pointer;font-size:14px;padding:4px;}
+.gallery-item .btnGroup{display:flex;gap:2px;}
+.gallery-item button{background:none;border:none;color:white;cursor:pointer;font-size:16px;padding:4px;}
 #galleryCounter{margin-top:auto;text-align:center;font-size:13px;opacity:0.7;}
-.colorPicker{position:absolute;display:none;grid-template-columns:repeat(3,18px);gap:8px;padding:10px;background:rgba(0,0,0,0.9);border-radius:12px;box-shadow:0 0 18px rgba(255,255,255,0.4);z-index:999;}
-.colorBox{width:18px;height:18px;border-radius:4px;cursor:pointer;box-shadow:0 0 6px rgba(255,255,255,0.9);}
+.colorPicker{position:absolute;display:none;grid-template-columns:repeat(3,20px);gap:8px;padding:10px;background:rgba(0,0,0,0.9);border-radius:12px;box-shadow:0 0 18px rgba(255,255,255,0.4);z-index:999;}
+.colorBox{width:20px;height:20px;border-radius:4px;cursor:pointer;box-shadow:0 0 6px rgba(255,255,255,0.9);}
 #main{flex:1;padding:20px;display:flex;flex-direction:column;position:relative;}
-#currentGalleryName{font-size:22px;margin-bottom:14px;}
+#currentGalleryName{font-size:24px;margin-bottom:14px;font-weight:bold;}
 #topControls{display:flex;gap:10px;margin-bottom:20px;}
-input, button{padding:10px 14px;border-radius:10px;border:none;font-size:14px;}
-#galleryContainer{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:36px;}
+input, button{padding:10px 14px;border-radius:10px;border:none;font-size:14px;transition:0.3s;}
+button:hover{filter:brightness(0.9);}
+#galleryContainer{display:grid;grid-template-columns:repeat(5,minmax(180px,1fr));gap:48px;}
 .fileCard{position:relative;background:rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;box-shadow:0 0 6px rgba(255,255,255,0.25);transform:translateY(20px);opacity:0;transition:0.4s;}
 .fileCard.show{transform:translateY(0);opacity:1;}
 .fileCard:hover{transform:translateY(-5px);box-shadow:0 15px 30px rgba(0,0,0,0.6);}
@@ -54,37 +55,57 @@ input, button{padding:10px 14px;border-radius:10px;border:none;font-size:14px;}
   align-items:center;
   flex-direction:column;
   z-index:10000;
+  color:#fff;
+}
+#usernameOverlay h2{
+  font-size:28px;
+  margin-bottom:12px;
+  animation:fadeIn 1s ease forwards;
 }
 #usernameOverlay input{
-  font-size:20px;
-  padding:12px 16px;
+  font-size:22px;
+  padding:14px 20px;
   border-radius:12px;
   border:none;
   outline:none;
   text-align:center;
+  background:rgba(255,255,255,0.05);
+  color:#fff;
+  box-shadow:0 0 18px rgba(255,255,255,0.6);
 }
 #usernameDisplay{
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  font-size:48px;
+  font-size:50px;
   color:#fff;
-  text-shadow:0 0 12px #fff,0 0 24px #fff;
+  opacity:0.15;
+  text-shadow:0 0 8px #fff,0 0 20px #fff;
   animation:float 3s ease-in-out infinite alternate;
   pointer-events:none;
 }
-@keyframes float{0%{transform:translate(-50%,-50%) translateY(0px);}100%{transform:translate(-50%,-50%) translateY(8px);}}
+@keyframes float{0%{transform:translate(-50%,-50%) translateY(0px);}100%{transform:translate(-50%,-50%) translateY(10px);}}
+@keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+
 #changeUsernameBtn{
   position:absolute;
   top:20px;
   right:20px;
   font-size:18px;
-  padding:6px 10px;
-  background:#2196F3;
+  padding:8px 12px;
+  background:linear-gradient(45deg,#2196F3,#4CAF50);
   border:none;
-  border-radius:8px;
+  border-radius:12px;
   cursor:pointer;
+  box-shadow:0 0 20px rgba(255,255,255,0.6);
+  color:#fff;
+  font-weight:bold;
+  transition:0.3s;
+}
+#changeUsernameBtn:hover{
+  transform:scale(1.05);
+  box-shadow:0 0 28px rgba(255,255,255,0.8);
 }
 </style>
 </head>
@@ -208,7 +229,7 @@ function renderGalleries(){
       if(openPicker===picker){picker.style.display="none";openPicker=null;return;}
       document.querySelectorAll(".colorPicker").forEach(p=>p.style.display="none");
       const r=div.getBoundingClientRect();
-      picker.style.top=r.top+"px";
+      picker.style.top=(r.top+window.scrollY)+"px";
       picker.style.left=(r.right+22)+"px";
       picker.style.display="grid";
       openPicker=picker;
@@ -297,5 +318,6 @@ renderGalleries();renderFiles();
 </script>
 </body>
 </html>
+
 
 
