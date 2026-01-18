@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 4.1</title>
+<title>MyGallery Premium 4.2</title>
 <style>
 body{
   margin:0;
@@ -13,24 +13,26 @@ body{
   background:#000;
   color:#fff;
   overflow:hidden;
+  font-weight:bold; /* tout en gras */
 }
 .star{position:absolute;background:white;border-radius:50%;opacity:0.6;animation:twinkle 4s infinite alternate;}
 @keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:1}}
 #sidebar{width:240px;background:rgba(255,255,255,0.04);padding:20px;display:flex;flex-direction:column;gap:28px;border-right:1px solid rgba(255,255,255,0.1);z-index:2;}
 #sidebar h3{margin:0;}
-#galleriesList{display:flex;flex-direction:column;gap:32px;} /* un peu plus espacés */
+#galleriesList{display:flex;flex-direction:column;gap:36px;} /* encore plus espacés */
 .gallery-item{padding:14px 16px;border-radius:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:bold;color:white;box-shadow:0 0 16px currentColor;transition:transform 0.25s, box-shadow 0.25s;}
 .gallery-item:hover{transform:scale(1.04);box-shadow:0 0 26px currentColor;}
-.gallery-item.active{box-shadow:0 0 32px currentColor;}
-.btnGroup{display:flex;gap:1px;} /* boutons collés ensemble */
-.gallery-item button{background:none;border:none;color:white;cursor:pointer;font-size:14px;padding:4px;} /* plus compact */
+.gallery-item.active{box-shadow:0 0 32px currentColor;transform:scale(1.12);} /* bouton actif plus gros */
+.btnGroup{display:flex;gap:1px;} /* boutons collés */
+.gallery-item button{background:none;border:none;color:white;cursor:pointer;font-size:14px;padding:4px;}
 #galleryCounter{margin-top:auto;text-align:center;font-size:13px;opacity:0.7;}
 .colorPicker{position:absolute;display:none;grid-template-columns:repeat(3,18px);gap:8px;padding:10px;background:rgba(0,0,0,0.9);border-radius:12px;box-shadow:0 0 18px rgba(255,255,255,0.4);z-index:999;}
 .colorBox{width:18px;height:18px;border-radius:4px;cursor:pointer;box-shadow:0 0 6px rgba(255,255,255,0.9);}
 #main{flex:1;padding:20px;display:flex;flex-direction:column;}
+#currentGalleryName{font-size:22px;margin-bottom:14px;}
 #topControls{display:flex;gap:10px;margin-bottom:20px;}
 input, button{padding:10px 14px;border-radius:10px;border:none;font-size:14px;}
-#galleryContainer{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:32px;} /* plus espacés */
+#galleryContainer{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:36px;} /* plus espacés */
 .fileCard{position:relative;background:rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;box-shadow:0 0 6px rgba(255,255,255,0.25);transform:translateY(20px);opacity:0;transition:0.4s;}
 .fileCard.show{transform:translateY(0);opacity:1;}
 .fileCard:hover{transform:translateY(-5px);box-shadow:0 15px 30px rgba(0,0,0,0.6);}
@@ -53,6 +55,7 @@ input, button{padding:10px 14px;border-radius:10px;border:none;font-size:14px;}
 </div>
 
 <div id="main">
+  <div id="currentGalleryName">gallery1</div>
   <div id="topControls">
     <input type="file" id="fileInput" multiple>
     <button id="uploadBtn">Upload</button>
@@ -84,9 +87,11 @@ const addGalleryBtn=document.getElementById("addGalleryBtn");
 const modal=document.getElementById("modal");
 const modalContent=document.getElementById("modalContent");
 const closeModal=document.getElementById("closeModal");
+const currentGalleryName=document.getElementById("currentGalleryName");
 
 function save(){localStorage.setItem("galleries",JSON.stringify(galleries));}
 function updateCounter(){counter.textContent=`${Object.keys(galleries).length} / ${MAX_GALLERIES}`; addGalleryBtn.style.display=Object.keys(galleries).length>=MAX_GALLERIES?"none":"block";}
+function updateCurrentGalleryName(){currentGalleryName.textContent=currentGallery;}
 
 function renderGalleries(){
   galleriesList.innerHTML="";
@@ -111,7 +116,7 @@ function renderGalleries(){
         galleries[n]=galleries[name];
         delete galleries[name];
         currentGallery=n;
-        save();renderGalleries();renderFiles();
+        save();renderGalleries();renderFiles();updateCurrentGalleryName();
       }
     };
 
@@ -122,7 +127,7 @@ function renderGalleries(){
       if(confirm("Supprimer cette galerie ?")){
         delete galleries[name];
         if(currentGallery===name)currentGallery=Object.keys(galleries)[0]||"gallery1";
-        save();renderGalleries();renderFiles();
+        save();renderGalleries();renderFiles();updateCurrentGalleryName();
       }
     };
 
@@ -157,10 +162,11 @@ function renderGalleries(){
     btnGroup.append(renameBtn,paletteBtn,deleteGalleryBtn);
     div.appendChild(btnGroup);
     document.body.appendChild(picker);
-    div.onclick=()=>{currentGallery=name;renderGalleries();renderFiles();};
+    div.onclick=()=>{currentGallery=name;renderGalleries();renderFiles();updateCurrentGalleryName();};
     galleriesList.appendChild(div);
   }
   updateCounter();
+  updateCurrentGalleryName();
 }
 
 function renderFiles(){
