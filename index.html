@@ -34,22 +34,20 @@ body{
   padding:20px;
   display:flex;
   flex-direction:column;
-  gap:24px;
+  gap:16px;
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
-  overflow:hidden; /* pas de scroll horizontal */
 }
 
 #galleriesList{
   display:flex;
   flex-direction:column;
-  gap:16px;
-  overflow-y:auto; /* UNE seule barre verticale */
+  gap:12px;
+  overflow-y:auto; /* UNE seule barre verticale pour toutes les galleries */
   max-height:calc(100vh - 120px);
   padding-right:6px;
 }
 
-/* Scroll vertical propre */
 #galleriesList::-webkit-scrollbar{
   width:6px;
 }
@@ -63,28 +61,26 @@ body{
 }
 
 .gallery-item{
-  padding:12px 14px;
+  padding:12px;
   border-radius:14px;
   cursor:pointer;
   display:flex;
   justify-content:space-between;
   align-items:center;
+  width:100%;
+  min-height:48px; /* tous de la même taille */
   box-shadow:none;
   transition:0.25s;
-  width:auto;
   position:relative;
   z-index:1;
   border: 1px solid rgba(200,200,200,0.3);
   overflow:visible;
-}
-.gallery-item:hover{
-  transform:scale(1.04);
-  z-index:10;
+  word-break:break-word; /* texte long passe à la ligne */
 }
 
 .btnGroup{
   display:flex;
-  gap:0px; /* boutons très proches */
+  gap:1px; /* emojis très proches */
   overflow:visible;
 }
 
@@ -345,7 +341,11 @@ function renderGalleries(){
     const div=document.createElement("div");
     div.className="gallery-item";
     div.style.color=g.color;
-    div.textContent=name;
+
+    const nameDiv = document.createElement("div");
+    nameDiv.textContent=name;
+    nameDiv.style.flex="1";
+    nameDiv.style.wordBreak="break-word";
 
     const btnGroup=document.createElement("div");
     btnGroup.className="btnGroup";
@@ -406,6 +406,7 @@ function renderGalleries(){
     };
 
     btnGroup.append(renameBtn,paletteBtn,deleteBtn);
+    div.appendChild(nameDiv);
     div.appendChild(btnGroup);
     document.body.appendChild(picker);
     div.onclick=()=>{currentGallery=name;renderFiles();currentGalleryName.textContent=name};
@@ -449,7 +450,7 @@ function renderFiles(){
   });
 }
 
-// Upload pour tous types de fichiers
+// Upload tous types de fichiers directement dans la galerie courante
 uploadBtn.onclick=()=>{
   const files = fileInput.files;
   if(!files.length) return;
@@ -516,11 +517,4 @@ modal.onclick = e => { if(e.target === modal || e.target === closeModal) modal.s
 </script>
 </body>
 </html>
-
-
-
-
-
-
-
 
