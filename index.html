@@ -2,314 +2,427 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>MyGallery Premium</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyGallery Premium 5.2</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
+
 <style>
 *{
-  box-sizing:border-box;
-  font-family: Arial, sans-serif;
   font-weight:700;
 }
 
 body{
   margin:0;
+  font-family:'Segoe UI',Tahoma,Verdana,sans-serif;
+  display:flex;
+  height:100vh;
   background:#000;
-  color:white;
+  color:#fff;
   overflow:hidden;
+  position:relative;
 }
 
-/* ===== USERNAME ===== */
-#usernameDisplay{
+/* STARS */
+.star{position:absolute;background:white;border-radius:50%;opacity:0.6;animation:twinkle 4s infinite alternate;}
+@keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:1}}
+
+#sidebar{
+  width:240px;
+  background:rgba(255,255,255,0.04);
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+  border-right:1px solid rgba(255,255,255,0.1);
+  z-index:2;
+}
+
+#galleriesList{
+  display:flex;
+  flex-direction:column;
+  gap:32px;
+}
+
+.gallery-item{
+  padding:12px 14px;
+  border-radius:14px;
+  cursor:pointer;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 0 16px currentColor;
+  transition:0.25s;
+}
+.gallery-item:hover{
+  transform:scale(1.04);
+  box-shadow:0 0 26px currentColor;
+}
+
+.btnGroup{
+  display:flex;
+  gap:6px;
+}
+
+.gallery-item button{
+  background:none;
+  border:none;
+  color:white;
+  cursor:pointer;
+  font-size:16px;
+}
+
+#galleryCounter{
+  margin-top:auto;
+  text-align:center;
+  font-size:13px;
+  opacity:0.7;
+}
+
+#main{
+  flex:1;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  position:relative;
+}
+
+#currentGalleryName{
+  font-size:24px;
+  margin-bottom:14px;
+}
+
+#topControls{
+  display:flex;
+  gap:10px;
+  margin-bottom:20px;
+}
+
+input,button{
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+}
+
+#galleryContainer{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(180px,1fr));
+  gap:48px;
+}
+
+/* FILE CARDS */
+.fileCard{
+  position:relative;
+  background:rgba(255,255,255,0.05);
+  border-radius:16px;
+  overflow:hidden;
+  box-shadow:0 0 8px rgba(255,255,255,0.25);
+  transform:translateY(20px);
+  opacity:0;
+  transition:0.4s;
+}
+.fileCard.show{
+  transform:translateY(0);
+  opacity:1;
+}
+.fileCard:hover{
+  transform:translateY(-6px);
+  box-shadow:0 20px 40px rgba(0,0,0,0.7);
+}
+.fileCard img,.fileCard video{width:100%}
+
+.fileName{
+  text-align:center;
+  padding:6px;
+}
+
+.actionBtn{
+  position:absolute;
+  top:10px;
+  padding:4px 8px;
+  border-radius:6px;
+  color:white;
+  cursor:pointer;
+  font-size:12px;
+}
+.renameBtn{left:10px;background:#2196F3}
+.deleteBtn{right:10px;background:#ff4d4d}
+
+/* MODAL */
+#modal{
+  display:none;
   position:fixed;
+  inset:0;
+  background:rgba(0,0,0,0.85);
+  justify-content:center;
+  align-items:center;
+  z-index:1000;
+}
+#modal img,#modal video{
+  max-width:90%;
+  max-height:90%;
+  border-radius:16px;
+}
+#closeModal{
+  position:absolute;
+  top:20px;
+  right:30px;
+  font-size:36px;
+  cursor:pointer;
+}
+
+/* USERNAME */
+#usernameOverlay{
+  position:absolute;
+  inset:0;
+  background:rgba(0,0,0,0.96);
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+  z-index:10000;
+}
+
+#usernameOverlay input{
+  font-size:22px;
+  padding:14px 22px;
+  border-radius:14px;
+  background:rgba(255,255,255,0.08);
+  color:#fff;
+  outline:none;
+  border:none;
+  text-align:center;
+  box-shadow:0 0 30px rgba(255,255,255,0.6);
+}
+
+#usernameDisplay{
+  position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
-  font-size:38px;
-  font-weight:400;
-  font-family:'Segoe UI',sans-serif;
-  color:rgba(255,255,255,0.35);
-  text-shadow:0 0 18px rgba(255,255,255,0.6);
+  font-family:'Montserrat',sans-serif;
+  font-size:58px;
+  font-weight:300; /* NOT BOLD */
+  letter-spacing:2px;
+  color:rgba(255,255,255,0.6);
+  text-shadow:
+    0 0 12px rgba(255,255,255,0.8),
+    0 0 28px rgba(255,255,255,0.6),
+    0 0 44px rgba(255,255,255,0.4);
   animation:float 6s ease-in-out infinite;
   pointer-events:none;
 }
 
 @keyframes float{
-  0%,100%{transform:translate(-50%,-50%)}
-  50%{transform:translate(-50%,-53%)}
+  0%{transform:translate(-50%,-50%) translateY(0)}
+  50%{transform:translate(-50%,-50%) translateY(4px)}
+  100%{transform:translate(-50%,-50%) translateY(0)}
 }
 
-/* ===== TOP BAR ===== */
-#topBar{
-  position:fixed;
-  top:15px;
+#changeUsernameBtn{
+  position:absolute;
+  top:20px;
   right:20px;
-}
-
-#changeUser{
+  padding:10px 18px;
   background:white;
   color:black;
-  border:none;
-  padding:10px 18px;
-  border-radius:10px;
+  border-radius:14px;
   cursor:pointer;
 }
-
-/* ===== LAYOUT ===== */
-#app{
-  display:flex;
-  height:100vh;
-}
-
-#galleries{
-  width:260px;
-  padding:20px;
-  overflow-y:auto;
-}
-
-.gallery{
-  background:#111;
-  padding:12px;
-  border-radius:10px;
-  margin-bottom:18px;
-  box-shadow:0 0 12px currentColor;
-}
-
-.galleryHeader{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-}
-
-.tools{
-  display:flex;
-  gap:4px;
-}
-
-.tools span{
-  cursor:pointer;
-}
-
-#addGallery{
-  width:100%;
-  margin-top:10px;
-  padding:10px;
-  background:#222;
-  color:white;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-}
-
-#counter{
-  margin-top:10px;
-  text-align:center;
-  opacity:0.7;
-}
-
-/* ===== CONTENT ===== */
-#content{
-  flex:1;
-  padding:20px;
-  overflow-y:auto;
-}
-
-.uploadBtn{
-  margin-bottom:15px;
-}
-
-.item{
-  position:relative;
-  display:inline-block;
-  margin:10px;
-}
-
-.item img,.item video{
-  width:150px;
-  border-radius:10px;
-}
-
-.itemTools{
-  position:absolute;
-  top:5px;
-  right:5px;
-  display:flex;
-  gap:5px;
-}
-
-.itemTools button{
-  background:red;
-  border:none;
-  color:white;
-  cursor:pointer;
-  padding:2px 6px;
-  border-radius:5px;
-}
-
-/* ===== PALETTE ===== */
-#paletteBox{
-  position:fixed;
-  left:280px;
-  top:120px;
-  background:#111;
-  padding:10px;
-  border-radius:10px;
-  display:none;
-  max-height:300px;
-  overflow-y:auto;
-}
-
-.color{
-  width:22px;
-  height:22px;
-  margin:4px;
-  border-radius:4px;
-  cursor:pointer;
-  display:inline-block;
-}
-
 </style>
 </head>
 <body>
 
+<div id="sidebar">
+  <h3>Galleries</h3>
+  <div id="galleriesList"></div>
+  <button id="addGalleryBtn">➕</button>
+  <div id="galleryCounter">1 / 10</div>
+</div>
+
+<div id="main">
+  <div id="currentGalleryName">gallery1</div>
+  <button id="changeUsernameBtn">Change Username</button>
+
+  <div id="topControls">
+    <input type="file" id="fileInput" multiple>
+    <button id="uploadBtn">Upload</button>
+    <button id="clearBtn">Clear Gallery</button>
+    <input type="text" id="searchInput" placeholder="Search...">
+  </div>
+
+  <div id="galleryContainer"></div>
+</div>
+
+<div id="modal">
+  <span id="closeModal">&times;</span>
+  <div id="modalContent"></div>
+</div>
+
+<div id="usernameOverlay">
+  <h2>Enter your username</h2>
+  <input id="usernameInput" placeholder="username">
+</div>
+
 <div id="usernameDisplay"></div>
 
-<div id="topBar">
-  <button id="changeUser">Change username</button>
-</div>
-
-<div id="app">
-  <div id="galleries">
-    <button id="addGallery">＋ Add gallery</button>
-    <div id="counter">1 / 10 galleries</div>
-  </div>
-
-  <div id="content">
-    <input type="file" class="uploadBtn" multiple>
-    <div id="items"></div>
-  </div>
-</div>
-
-<div id="paletteBox"></div>
-
 <script>
-let username = localStorage.getItem("username") || "";
-if(!username){
-  username = prompt("Choose a username");
+const MAX_GALLERIES=10;
+let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
+let currentGallery="gallery1";
+let username=localStorage.getItem("username")||"";
+
+const galleriesList=document.getElementById("galleriesList");
+const galleryContainer=document.getElementById("galleryContainer");
+const fileInput=document.getElementById("fileInput");
+const uploadBtn=document.getElementById("uploadBtn");
+const clearBtn=document.getElementById("clearBtn");
+const counter=document.getElementById("galleryCounter");
+const addGalleryBtn=document.getElementById("addGalleryBtn");
+const currentGalleryName=document.getElementById("currentGalleryName");
+const usernameOverlay=document.getElementById("usernameOverlay");
+const usernameInput=document.getElementById("usernameInput");
+const usernameDisplay=document.getElementById("usernameDisplay");
+const changeUsernameBtn=document.getElementById("changeUsernameBtn");
+
+function save(){
+  localStorage.setItem("galleries",JSON.stringify(galleries));
   localStorage.setItem("username",username);
 }
-document.getElementById("usernameDisplay").innerText = username;
 
-document.getElementById("changeUser").onclick=()=>{
-  const n = prompt("New username");
-  if(n){
-    username=n;
-    localStorage.setItem("username",n);
-    document.getElementById("usernameDisplay").innerText=n;
-  }
-};
+function renderGalleries(){
+  galleriesList.innerHTML="";
+  for(const name in galleries){
+    const g=galleries[name];
+    const div=document.createElement("div");
+    div.className="gallery-item";
+    div.style.color=g.color;
+    div.textContent=name;
 
-let galleries=[];
-let current=0;
-const max=10;
+    const btnGroup=document.createElement("div");
+    btnGroup.className="btnGroup";
 
-const colors=["white","red","orange","yellow","green","blue","purple","pink"];
-
-function update(){
-  const g=document.getElementById("galleries");
-  g.querySelectorAll(".gallery").forEach(e=>e.remove());
-
-  galleries.forEach((gal,i)=>{
-    const d=document.createElement("div");
-    d.className="gallery";
-    d.style.color=gal.color;
-    d.innerHTML=`
-      <div class="galleryHeader">
-        <span>${gal.name}</span>
-        <div class="tools">
-          <span onclick="rename(${i})">✏️</span>
-          <span onclick="palette(${i})">🎨</span>
-          <span onclick="del(${i})">🗑️</span>
-        </div>
-      </div>`;
-    d.onclick=()=>{current=i;renderItems()};
-    g.insertBefore(d,document.getElementById("addGallery"));
-  });
-
-  document.getElementById("counter").innerText=`${galleries.length} / 10 galleries`;
-  document.getElementById("addGallery").style.display=
-    galleries.length>=10?"none":"block";
-}
-
-function rename(i){
-  const n=prompt("Rename gallery");
-  if(n){galleries[i].name=n;update();}
-}
-
-function del(i){
-  galleries.splice(i,1);
-  if(current>=galleries.length)current=0;
-  update();renderItems();
-}
-
-function palette(i){
-  const box=document.getElementById("paletteBox");
-  box.innerHTML="";
-  colors.forEach(c=>{
-    const d=document.createElement("div");
-    d.className="color";
-    d.style.background=c;
-    d.onclick=()=>{
-      galleries[i].color=c;
-      box.style.display="none";
-      update();
+    const renameBtn=document.createElement("button");
+    renameBtn.textContent="✏️";
+    renameBtn.onclick=e=>{
+      e.stopPropagation();
+      const n=prompt("New name:",name);
+      if(n&&!galleries[n]){
+        galleries[n]=galleries[name];
+        delete galleries[name];
+        currentGallery=n;
+        save();renderGalleries();renderFiles();
+      }
     };
-    box.appendChild(d);
-  });
-  box.style.display= box.style.display==="none"?"block":"none";
+
+    const paletteBtn=document.createElement("button");
+    paletteBtn.textContent="🎨";
+    paletteBtn.onclick=e=>{
+      e.stopPropagation();
+      const c=prompt("Color (white/red/blue/etc):",g.color);
+      if(c){g.color=c;save();renderGalleries();}
+    };
+
+    const deleteBtn=document.createElement("button");
+    deleteBtn.textContent="🗑️";
+    deleteBtn.onclick=e=>{
+      e.stopPropagation();
+      if(confirm("Delete gallery?")){
+        delete galleries[name];
+        currentGallery=Object.keys(galleries)[0];
+        save();renderGalleries();renderFiles();
+      }
+    };
+
+    btnGroup.append(renameBtn,paletteBtn,deleteBtn);
+    div.appendChild(btnGroup);
+    div.onclick=()=>{currentGallery=name;renderFiles();currentGalleryName.textContent=name};
+    galleriesList.appendChild(div);
+  }
+
+  counter.textContent=`${Object.keys(galleries).length} / ${MAX_GALLERIES}`;
+  addGalleryBtn.style.display=Object.keys(galleries).length>=MAX_GALLERIES?"none":"block";
 }
 
-document.getElementById("addGallery").onclick=()=>{
-  if(galleries.length<10){
-    galleries.push({name:`Gallery ${galleries.length+1}`,color:"white",items:[]});
-    update();
+function renderFiles(){
+  galleryContainer.innerHTML="";
+  galleries[currentGallery].files.forEach((f,i)=>{
+    const c=document.createElement("div");
+    c.className="fileCard";
+    c.innerHTML=`
+      ${f.type.startsWith("image")?`<img src="${f.data}">`:`<video src="${f.data}" controls></video>`}
+      <div class="fileName">${f.name}</div>
+      <button class="actionBtn renameBtn">Rename</button>
+      <button class="actionBtn deleteBtn">X</button>
+    `;
+    c.querySelector(".renameBtn").onclick=e=>{
+      e.stopPropagation();
+      const n=prompt("New name:",f.name);
+      if(n){f.name=n;save();renderFiles();}
+    };
+    c.querySelector(".deleteBtn").onclick=e=>{
+      e.stopPropagation();
+      galleries[currentGallery].files.splice(i,1);
+      save();renderFiles();
+    };
+    galleryContainer.appendChild(c);
+    setTimeout(()=>c.classList.add("show"),50*i);
+  });
+}
+
+uploadBtn.onclick=()=>{
+  [...fileInput.files].forEach(file=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      galleries[currentGallery].files.push({name:file.name,type:file.type,data:e.target.result});
+      save();renderFiles();
+    };
+    r.readAsDataURL(file);
+  });
+  fileInput.value="";
+};
+
+addGalleryBtn.onclick=()=>{
+  if(Object.keys(galleries).length>=MAX_GALLERIES)return;
+  const n=prompt("New gallery name:");
+  if(n&&!galleries[n]){
+    galleries[n]={files:[],color:"white"};
+    save();renderGalleries();
   }
 };
 
-document.querySelector(".uploadBtn").onchange=e=>{
-  const files=[...e.target.files];
-  files.forEach(f=>{
-    const url=URL.createObjectURL(f);
-    galleries[current].items.push({url});
-  });
-  renderItems();
+if(username){
+  usernameOverlay.style.display="none";
+  usernameDisplay.textContent=username;
+}
+usernameInput.onkeydown=e=>{
+  if(e.key==="Enter"&&usernameInput.value.trim()){
+    username=usernameInput.value.trim();
+    save();
+    usernameOverlay.style.display="none";
+    usernameDisplay.textContent=username;
+  }
+};
+changeUsernameBtn.onclick=()=>{
+  const n=prompt("New username:",username);
+  if(n){username=n.trim();save();usernameDisplay.textContent=username;}
 };
 
-function renderItems(){
-  const c=document.getElementById("items");
-  c.innerHTML="";
-  if(!galleries[current])return;
-  galleries[current].items.forEach((it,i)=>{
-    const d=document.createElement("div");
-    d.className="item";
-    d.innerHTML=`
-      <img src="${it.url}">
-      <div class="itemTools">
-        <button onclick="removeItem(${i})">X</button>
-      </div>`;
-    c.appendChild(d);
-  });
+for(let i=0;i<200;i++){
+  const s=document.createElement("div");
+  s.className="star";
+  s.style.top=Math.random()*100+"%";
+  s.style.left=Math.random()*100+"%";
+  s.style.width=s.style.height=(Math.random()*2+1)+"px";
+  document.body.appendChild(s);
 }
 
-function removeItem(i){
-  galleries[current].items.splice(i,1);
-  renderItems();
-}
-
-galleries.push({name:"Gallery 1",color:"white",items:[]});
-update();
+renderGalleries();
+renderFiles();
 </script>
-
 </body>
 </html>
+
 
 
 
