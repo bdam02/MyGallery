@@ -36,14 +36,14 @@ body{
   gap:24px;
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
-  overflow:hidden;
+  overflow:hidden; /* plus de scroll individuel */
 }
 
 #galleriesList{
   display:flex;
   flex-direction:column;
   gap:32px;
-  overflow-y:hidden; /* plus de scroll individuel */
+  overflow-y:hidden; /* plus de scroll pour chaque bouton */
 }
 
 .gallery-item{
@@ -58,11 +58,12 @@ body{
   width:auto;
   position:relative;
   z-index:1;
+  border: 1px solid rgba(200,200,200,0.3); /* UI stroke léger */
 }
 .gallery-item:hover{
   transform:scale(1.04);
   box-shadow:0 0 26px currentColor;
-  z-index:10; /* boutons passent par dessus */
+  z-index:10;
 }
 
 .btnGroup{
@@ -76,10 +77,6 @@ body{
   color:white;
   cursor:pointer;
   font-size:16px;
-}
-
-.gallery-item button:hover{
-  text-shadow:0 0 12px white; /* mini glow */
 }
 
 #galleryCounter{
@@ -434,7 +431,7 @@ function renderFiles(){
   });
 }
 
-// ✅ Upload corrigé pour tous types de fichiers
+// Upload corrigé pour tous types de fichiers
 uploadBtn.onclick=()=>{
   const files = fileInput.files;
   if(!files.length) return;
@@ -492,11 +489,16 @@ for(let i=0;i<200;i++){
 renderGalleries();
 renderFiles();
 
-document.getElementById("closeModal").onclick=()=>{document.getElementById("modal").style.display="none";};
-document.getElementById("modal").onclick=e=>{if(e.target===document.getElementById("modal"))document.getElementById("modal").style.display="none";};
+// Modal correction pour bouton X
+const modal = document.getElementById("modal");
+const closeModal = document.getElementById("closeModal");
+
+closeModal.onclick = () => { modal.style.display = "none"; };
+modal.onclick = e => { if(e.target === modal) modal.style.display = "none"; };
 </script>
 </body>
 </html>
+
 
 
 
