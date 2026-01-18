@@ -10,6 +10,7 @@
 <style>
 *{
   font-weight:700;
+  box-sizing:border-box;
 }
 
 body{
@@ -36,19 +37,19 @@ body{
   gap:24px;
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
-  overflow:hidden;
+  overflow:hidden; /* pas de scroll horizontal */
 }
 
 #galleriesList{
   display:flex;
   flex-direction:column;
-  gap:32px;
-  overflow-y:auto; /* UNE barre de scroll pour toute la section */
+  gap:16px;
+  overflow-y:auto; /* UNE seule barre verticale */
   max-height:calc(100vh - 120px);
   padding-right:6px;
 }
 
-/* Custom scrollbar pour galleries */
+/* Scroll vertical propre */
 #galleriesList::-webkit-scrollbar{
   width:6px;
 }
@@ -83,7 +84,7 @@ body{
 
 .btnGroup{
   display:flex;
-  gap:0px; /* 🔥 boutons presque collés */
+  gap:0px; /* boutons très proches */
   overflow:visible;
 }
 
@@ -132,7 +133,7 @@ input,button{
   display:grid;
   grid-template-columns:repeat(5,minmax(180px,1fr));
   gap:48px;
-  overflow-y:auto; /* scroll uniquement ici */
+  overflow-y:auto; /* scroll vertical pour fichiers */
   max-height:calc(100vh - 180px);
   padding-right:6px;
 }
@@ -506,15 +507,16 @@ for(let i=0;i<200;i++){
 renderGalleries();
 renderFiles();
 
-// Modal correction pour bouton X
+// Modal correction pour bouton X et click autour
 const modal = document.getElementById("modal");
 const closeModal = document.getElementById("closeModal");
 
 closeModal.onclick = () => { modal.style.display = "none"; };
-modal.onclick = e => { if(e.target === modal) modal.style.display = "none"; };
+modal.onclick = e => { if(e.target === modal || e.target === closeModal) modal.style.display = "none"; };
 </script>
 </body>
 </html>
+
 
 
 
