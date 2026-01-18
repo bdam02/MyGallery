@@ -22,7 +22,7 @@ body{
 }
 
 /* STARS */
-.star{position:absolute;background:white;border-radius:50%;opacity:0.6;animation:twinkle 4s infinite alternate}
+.star{position:absolute;background:white;border-radius:50%;opacity:0.6;animation:twinkle 4s infinite alternate;}
 @keyframes twinkle{0%,100%{opacity:.2}50%{opacity:1}}
 
 #sidebar{
@@ -60,7 +60,7 @@ body{
 
 .btnGroup{
   display:flex;
-  gap:2px; /* 🔥 plus rapproché */
+  gap:0px; /* 🔥 boutons beaucoup plus rapprochés */
 }
 
 .gallery-item button{
@@ -198,10 +198,10 @@ input,button{
   letter-spacing:2px;
   color:rgba(255,255,255,.6);
   text-shadow:
-    0 0 12px rgba(255,255,255,.8),
-    0 0 28px rgba(255,255,255,.6),
-    0 0 44px rgba(255,255,255,.4);
-  animation:float 6s ease-in-out infinite;
+    0 0 4px rgba(255,255,255,.6),
+    0 0 12px rgba(255,255,255,.5),
+    0 0 18px rgba(255,255,255,.4);
+  animation:float 6s ease-in-out infinite, usernameGlow 4s infinite alternate;
   pointer-events:none;
 }
 
@@ -209,6 +209,11 @@ input,button{
   0%{transform:translate(-50%,-50%) translateY(0)}
   50%{transform:translate(-50%,-50%) translateY(4px)}
   100%{transform:translate(-50%,-50%) translateY(0)}
+}
+
+@keyframes usernameGlow{
+  0%,100%{text-shadow:0 0 4px rgba(255,255,255,.2),0 0 12px rgba(255,255,255,.2),0 0 18px rgba(255,255,255,.2);}
+  50%{text-shadow:0 0 12px rgba(255,255,255,.8),0 0 28px rgba(255,255,255,.7),0 0 44px rgba(255,255,255,.6);}
 }
 
 #changeUsernameBtn{
@@ -428,6 +433,7 @@ changeUsernameBtn.onclick=()=>{
   if(n){username=n.trim();save();usernameDisplay.textContent=username;}
 };
 
+/* STARS */
 for(let i=0;i<200;i++){
   const s=document.createElement("div");
   s.className="star";
@@ -442,6 +448,7 @@ renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
