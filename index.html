@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 3.8</title>
-
+<title>MyGallery Premium 3.9</title>
 <style>
 body{
   margin:0;
@@ -15,208 +14,37 @@ body{
   color:#fff;
   overflow:hidden;
 }
-
-/* ===== STARS ===== */
-.star{
-  position:absolute;
-  background:white;
-  border-radius:50%;
-  opacity:0.6;
-  animation:twinkle 4s infinite alternate;
-}
-@keyframes twinkle{
-  0%,100%{opacity:0.2}
-  50%{opacity:1}
-}
-
-/* ===== SIDEBAR ===== */
-#sidebar{
-  width:240px;
-  background:rgba(255,255,255,0.04);
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-  gap:28px; /* ✅ PLUS ESPACÉ */
-  border-right:1px solid rgba(255,255,255,0.1);
-  z-index:2;
-}
-
-#sidebar h3{
-  margin:0;
-}
-
-#galleriesList{
-  display:flex;
-  flex-direction:column;
-  gap:18px; /* ✅ empêche tout contact */
-}
-
-.gallery-item{
-  padding:14px 16px;
-  border-radius:14px;
-  cursor:pointer;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  font-weight:bold;
-  color:white;
-  box-shadow:0 0 16px currentColor;
-  transition:transform 0.25s, box-shadow 0.25s;
-}
-
-.gallery-item:hover{
-  transform:scale(1.04);
-  box-shadow:0 0 26px currentColor;
-}
-
-.gallery-item.active{
-  box-shadow:0 0 32px currentColor;
-}
-
-.btnGroup{
-  display:flex;
-  gap:6px;
-}
-
-.gallery-item button{
-  background:none;
-  border:none;
-  color:white;
-  cursor:pointer;
-  font-size:14px;
-}
-
-/* ===== COUNTER ===== */
-#galleryCounter{
-  margin-top:auto;
-  text-align:center;
-  font-size:13px;
-  opacity:0.7;
-}
-
-/* ===== COLOR PICKER ===== */
-.colorPicker{
-  position:absolute;
-  display:none;
-  grid-template-columns:repeat(3, 18px);
-  gap:8px;
-  padding:10px;
-  background:rgba(0,0,0,0.9);
-  border-radius:12px;
-  box-shadow:0 0 18px rgba(255,255,255,0.4);
-  z-index:999;
-}
-
-.colorBox{
-  width:18px;
-  height:18px;
-  border-radius:4px;
-  cursor:pointer;
-  box-shadow:0 0 6px rgba(255,255,255,0.9);
-}
-
-/* ===== MAIN ===== */
-#main{
-  flex:1;
-  padding:20px;
-  display:flex;
-  flex-direction:column;
-}
-
-#topControls{
-  display:flex;
-  gap:10px;
-  margin-bottom:20px;
-}
-
-input, button{
-  padding:10px 14px;
-  border-radius:10px;
-  border:none;
-  font-size:14px;
-}
-
-#galleryContainer{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:22px;
-}
-
-/* ===== FILE CARDS ===== */
-.fileCard{
-  position:relative;
-  background:rgba(255,255,255,0.05);
-  border-radius:16px;
-  overflow:hidden;
-  box-shadow:0 0 6px rgba(255,255,255,0.25);
-  transform:translateY(20px);
-  opacity:0;
-  transition:0.4s;
-}
-
-.fileCard.show{
-  transform:translateY(0);
-  opacity:1;
-}
-
-.fileCard:hover{
-  transform:translateY(-5px);
-  box-shadow:0 15px 30px rgba(0,0,0,0.6);
-}
-
-.fileCard img,
-.fileCard video{
-  width:100%;
-}
-
-.fileName{
-  text-align:center;
-  padding:6px;
-}
-
-.actionBtn{
-  position:absolute;
-  top:10px;
-  padding:4px 8px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  color:white;
-}
-
+.star{position:absolute;background:white;border-radius:50%;opacity:0.6;animation:twinkle 4s infinite alternate;}
+@keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:1}}
+#sidebar{width:240px;background:rgba(255,255,255,0.04);padding:20px;display:flex;flex-direction:column;gap:28px;border-right:1px solid rgba(255,255,255,0.1);z-index:2;}
+#sidebar h3{margin:0;}
+#galleriesList{display:flex;flex-direction:column;gap:20px;}
+.gallery-item{padding:14px 16px;border-radius:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;font-weight:bold;color:white;box-shadow:0 0 16px currentColor;transition:transform 0.25s, box-shadow 0.25s;}
+.gallery-item:hover{transform:scale(1.04);box-shadow:0 0 26px currentColor;}
+.gallery-item.active{box-shadow:0 0 32px currentColor;}
+.btnGroup{display:flex;gap:6px;}
+.gallery-item button{background:none;border:none;color:white;cursor:pointer;font-size:14px;}
+#galleryCounter{margin-top:auto;text-align:center;font-size:13px;opacity:0.7;}
+.colorPicker{position:absolute;display:none;grid-template-columns:repeat(3,18px);gap:8px;padding:10px;background:rgba(0,0,0,0.9);border-radius:12px;box-shadow:0 0 18px rgba(255,255,255,0.4);z-index:999;}
+.colorBox{width:18px;height:18px;border-radius:4px;cursor:pointer;box-shadow:0 0 6px rgba(255,255,255,0.9);}
+#main{flex:1;padding:20px;display:flex;flex-direction:column;}
+#topControls{display:flex;gap:10px;margin-bottom:20px;}
+input, button{padding:10px 14px;border-radius:10px;border:none;font-size:14px;}
+#galleryContainer{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:22px;}
+.fileCard{position:relative;background:rgba(255,255,255,0.05);border-radius:16px;overflow:hidden;box-shadow:0 0 6px rgba(255,255,255,0.25);transform:translateY(20px);opacity:0;transition:0.4s;}
+.fileCard.show{transform:translateY(0);opacity:1;}
+.fileCard:hover{transform:translateY(-5px);box-shadow:0 15px 30px rgba(0,0,0,0.6);}
+.fileCard img,.fileCard video{width:100%;}
+.fileName{text-align:center;padding:6px;}
+.actionBtn{position:absolute;top:10px;padding:4px 8px;border:none;border-radius:6px;cursor:pointer;color:white;}
 .renameBtn{left:10px;background:#2196F3;}
 .deleteBtn{right:10px;background:#ff4d4d;}
-
-/* ===== MODAL ===== */
-#modal{
-  display:none;
-  position:fixed;
-  inset:0;
-  background:rgba(0,0,0,0.85);
-  justify-content:center;
-  align-items:center;
-  z-index:1000;
-}
-
-#modal img,
-#modal video{
-  max-width:90%;
-  max-height:90%;
-  border-radius:16px;
-}
-
-#closeModal{
-  position:absolute;
-  top:20px;
-  right:30px;
-  font-size:36px;
-  cursor:pointer;
-}
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.85);justify-content:center;align-items:center;z-index:1000;}
+#modal img,#modal video{max-width:90%;max-height:90%;border-radius:16px;}
+#closeModal{position:absolute;top:20px;right:30px;font-size:36px;cursor:pointer;}
 </style>
 </head>
-
 <body>
-
 <div id="sidebar">
   <h3>Galleries</h3>
   <div id="galleriesList"></div>
@@ -240,12 +68,9 @@ input, button{
 </div>
 
 <script>
-const MAX_GALLERIES = 10;
+const MAX_GALLERIES=10;
 const colors=["red","orange","yellow","green","blue","purple","pink"];
-
-let galleries=JSON.parse(localStorage.getItem("galleries")) || {
-  gallery1:{files:[],color:"white"}
-};
+let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
 let currentGallery="gallery1";
 let openPicker=null;
 
@@ -255,17 +80,18 @@ const fileInput=document.getElementById("fileInput");
 const uploadBtn=document.getElementById("uploadBtn");
 const clearBtn=document.getElementById("clearBtn");
 const counter=document.getElementById("galleryCounter");
+const addGalleryBtn=document.getElementById("addGalleryBtn");
+const modal=document.getElementById("modal");
+const modalContent=document.getElementById("modalContent");
+const closeModal=document.getElementById("closeModal");
 
 function save(){localStorage.setItem("galleries",JSON.stringify(galleries));}
-function updateCounter(){
-  counter.textContent = `${Object.keys(galleries).length} / ${MAX_GALLERIES}`;
-}
+function updateCounter(){counter.textContent=`${Object.keys(galleries).length} / ${MAX_GALLERIES}`; addGalleryBtn.style.display=Object.keys(galleries).length>=MAX_GALLERIES?"none":"block";}
 
 function renderGalleries(){
   galleriesList.innerHTML="";
   document.querySelectorAll(".colorPicker").forEach(p=>p.remove());
   openPicker=null;
-
   for(const name in galleries){
     const g=galleries[name];
     const div=document.createElement("div");
@@ -289,12 +115,22 @@ function renderGalleries(){
       }
     };
 
+    const deleteGalleryBtn=document.createElement("button");
+    deleteGalleryBtn.textContent="🗑️";
+    deleteGalleryBtn.onclick=e=>{
+      e.stopPropagation();
+      if(confirm("Supprimer cette galerie ?")){
+        delete galleries[name];
+        if(currentGallery===name)currentGallery=Object.keys(galleries)[0]||"gallery1";
+        save();renderGalleries();renderFiles();
+      }
+    };
+
     const paletteBtn=document.createElement("button");
     paletteBtn.textContent="🎨";
 
     const picker=document.createElement("div");
     picker.className="colorPicker";
-
     colors.forEach(c=>{
       const box=document.createElement("div");
       box.className="colorBox";
@@ -302,21 +138,14 @@ function renderGalleries(){
       box.onclick=e=>{
         e.stopPropagation();
         g.color=c;
-        save();
-        picker.style.display="none";
-        openPicker=null;
-        renderGalleries();
+        save();picker.style.display="none";openPicker=null;renderGalleries();
       };
       picker.appendChild(box);
     });
 
     paletteBtn.onclick=e=>{
       e.stopPropagation();
-      if(openPicker===picker){
-        picker.style.display="none";
-        openPicker=null;
-        return;
-      }
+      if(openPicker===picker){picker.style.display="none";openPicker=null;return;}
       document.querySelectorAll(".colorPicker").forEach(p=>p.style.display="none");
       const r=div.getBoundingClientRect();
       picker.style.top=r.top+"px";
@@ -325,50 +154,16 @@ function renderGalleries(){
       openPicker=picker;
     };
 
-    btnGroup.append(renameBtn,paletteBtn);
+    btnGroup.append(renameBtn,paletteBtn,deleteGalleryBtn);
     div.appendChild(btnGroup);
     document.body.appendChild(picker);
 
-    div.onclick=()=>{
-      currentGallery=name;
-      renderGalleries();
-      renderFiles();
-    };
+    div.onclick=()=>{currentGallery=name;renderGalleries();renderFiles();};
 
     galleriesList.appendChild(div);
   }
   updateCounter();
 }
-
-/* ===== UPLOAD FIX ===== */
-uploadBtn.onclick=()=>{
-  const files=[...fileInput.files];
-  if(files.length===0){
-    alert("Sélectionne des fichiers");
-    return;
-  }
-  files.forEach(file=>{
-    const reader=new FileReader();
-    reader.onload=e=>{
-      galleries[currentGallery].files.push({
-        name:file.name,
-        type:file.type,
-        data:e.target.result
-      });
-      save();
-      renderFiles();
-    };
-    reader.readAsDataURL(file);
-  });
-  fileInput.value="";
-};
-
-clearBtn.onclick=()=>{
-  if(confirm("Supprimer toute la galerie ?")){
-    galleries[currentGallery].files=[];
-    save();renderFiles();
-  }
-};
 
 function renderFiles(){
   galleryContainer.innerHTML="";
@@ -391,52 +186,48 @@ function renderFiles(){
 
     c.querySelector(".deleteBtn").onclick=e=>{
       e.stopPropagation();
-      galleries[currentGallery].files.splice(i,1);
-      save();renderFiles();
+      galleries[currentGallery].files.splice(i,1);save();renderFiles();
     };
 
-    c.onclick=()=>{
-      modalContent.innerHTML=f.type.startsWith("image")
-        ?`<img src="${f.data}">`
-        :`<video src="${f.data}" controls autoplay></video>`;
-      modal.style.display="flex";
-    };
+    c.onclick=()=>{modalContent.innerHTML=f.type.startsWith("image")?`<img src="${f.data}">`:`<video src="${f.data}" controls autoplay></video>`;modal.style.display="flex";};
 
     galleryContainer.appendChild(c);
     setTimeout(()=>c.classList.add("show"),50*i);
   });
 }
 
+uploadBtn.onclick=()=>{
+  const files=[...fileInput.files];
+  if(files.length===0){alert("Sélectionne des fichiers");return;}
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      galleries[currentGallery].files.push({name:file.name,type:file.type,data:e.target.result});
+      save();renderFiles();
+    };
+    reader.readAsDataURL(file);
+  });
+  fileInput.value="";
+};
+
+clearBtn.onclick=()=>{if(confirm("Supprimer toute la galerie ?")){galleries[currentGallery].files=[];save();renderFiles();}};
 addGalleryBtn.onclick=()=>{
-  if(Object.keys(galleries).length>=MAX_GALLERIES){
-    alert("Limite de 10 galeries atteinte");
-    return;
-  }
+  if(Object.keys(galleries).length>=MAX_GALLERIES){alert("Limite atteinte");return;}
   const n=prompt("Nom de la nouvelle galerie :");
-  if(n&&!galleries[n]){
-    galleries[n]={files:[],color:"white"};
-    save();renderGalleries();
-  }
+  if(n&&!galleries[n]){galleries[n]={files:[],color:"white"};save();renderGalleries();}
 };
 
 closeModal.onclick=()=>modal.style.display="none";
 modal.onclick=e=>{if(e.target===modal)modal.style.display="none";};
 
 /* ===== STARS ===== */
-for(let i=0;i<220;i++){
-  const s=document.createElement("div");
-  s.className="star";
-  s.style.top=Math.random()*100+"%";
-  s.style.left=Math.random()*100+"%";
-  s.style.width=s.style.height=(Math.random()*2+1)+"px";
-  document.body.appendChild(s);
-}
+for(let i=0;i<220;i++){const s=document.createElement("div");s.className="star";s.style.top=Math.random()*100+"%";s.style.left=Math.random()*100+"%";s.style.width=s.style.height=(Math.random()*2+1)+"px";document.body.appendChild(s);}
 
-renderGalleries();
-renderFiles();
+renderGalleries();renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
