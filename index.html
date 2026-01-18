@@ -36,16 +36,16 @@ body{
   gap:24px;
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
-  overflow:hidden; /* pas de scroll sur body sidebar */
+  overflow:hidden;
 }
 
 #galleriesList{
   display:flex;
   flex-direction:column;
   gap:32px;
-  overflow-y:auto; /* une seule barre de scroll ici */
-  max-height:calc(100vh - 120px); /* prend en compte addGallery et counter */
-  padding-right:6px; /* espace pour scrollbar */
+  overflow-y:auto; /* UNE barre de scroll pour toute la section */
+  max-height:calc(100vh - 120px);
+  padding-right:6px;
 }
 
 /* Custom scrollbar pour galleries */
@@ -68,12 +68,12 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  box-shadow:none; /* plus de glow */
+  box-shadow:none;
   transition:0.25s;
   width:auto;
   position:relative;
   z-index:1;
-  border: 1px solid rgba(200,200,200,0.3); /* UI stroke léger */
+  border: 1px solid rgba(200,200,200,0.3);
   overflow:visible;
 }
 .gallery-item:hover{
@@ -83,7 +83,7 @@ body{
 
 .btnGroup{
   display:flex;
-  gap:2px; 
+  gap:0px; /* 🔥 boutons presque collés */
   overflow:visible;
 }
 
@@ -134,7 +134,7 @@ input,button{
   gap:48px;
   overflow-y:auto; /* scroll uniquement ici */
   max-height:calc(100vh - 180px);
-  padding-right:6px; /* espace pour scrollbar */
+  padding-right:6px;
 }
 
 /* FILE CARDS */
@@ -448,7 +448,7 @@ function renderFiles(){
   });
 }
 
-// Upload corrigé pour tous types de fichiers
+// Upload pour tous types de fichiers
 uploadBtn.onclick=()=>{
   const files = fileInput.files;
   if(!files.length) return;
@@ -515,6 +515,8 @@ modal.onclick = e => { if(e.target === modal) modal.style.display = "none"; };
 </script>
 </body>
 </html>
+
+
 
 
 
