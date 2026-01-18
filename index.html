@@ -43,7 +43,7 @@ body{
   display:flex;
   flex-direction:column;
   gap:12px;
-  overflow-y:auto; /* UNE seule barre verticale pour toutes les galleries */
+  overflow-y:auto;
   max-height:calc(100vh - 120px);
   padding-right:6px;
 }
@@ -81,7 +81,7 @@ body{
 
 .btnGroup{
   display:flex;
-  gap:0px; /* emojis vraiment très proches */
+  gap:0px;
   overflow:visible;
 }
 
@@ -129,7 +129,7 @@ body{
   display:flex;
   gap:10px;
   margin-bottom:20px;
-  align-items: center;
+  align-items:center;
 }
 
 input,button{
@@ -139,25 +139,25 @@ input,button{
 }
 
 #searchInput {
-  flex: 1 1 200px; /* raccourci la barre de search */
+  flex: 1 1 200px;
   max-width: 300px;
 }
 
 #likedFilesBtn {
   padding: 10px 14px;
-  border-radius: 10px;
-  border: none;
-  background: white;   /* fond blanc */
-  color: #ff2d55;      /* rose cœur */
-  cursor: pointer;
-  font-size: 18px;
+  border-radius:10px;
+  border:none;
+  background: white;
+  color: #ff2d55;
+  cursor:pointer;
+  font-size:18px;
 }
 
 #galleryContainer{
   display:grid;
   grid-template-columns:repeat(5,minmax(180px,1fr));
   gap:48px;
-  overflow-y:auto; /* scroll vertical pour fichiers */
+  overflow-y:auto;
   max-height:calc(100vh - 180px);
   padding-right:6px;
   position:relative;
@@ -203,7 +203,7 @@ input,button{
 }
 .renameBtn{left:10px;background:#2196F3}
 .deleteBtn{right:10px;background:#ff4d4d}
-.likeBtn{right:40px;font-size:14px;color:white;}
+.likeBtn{right:40px;font-size:14px; border: 1px solid black; border-radius:50%; padding:2px 4px;} /* UI stroke noir par défaut */
 
 /* MODAL */
 #modal{
@@ -266,7 +266,7 @@ input,button{
   text-shadow:0 0 12px rgba(255,255,255,0.8),0 0 28px rgba(255,255,255,0.6),0 0 44px rgba(255,255,255,0.4);
   animation:twinkleGlow 4s infinite alternate, float 6s ease-in-out infinite;
   pointer-events:none;
-  z-index:0; /* Username toujours derrière les fichiers */
+  z-index:0; /* Username derrière les fichiers */
 }
 
 @keyframes float{
@@ -325,7 +325,7 @@ input,button{
     <button id="uploadBtn">Upload</button>
     <button id="clearBtn">Clear Gallery</button>
     <input type="text" id="searchInput" placeholder="Search...">
-    <button id="likedFilesBtn">❤️</button> <!-- bouton liked -->
+    <button id="likedFilesBtn">❤️</button>
   </div>
 
   <div id="galleryContainer"></div>
@@ -477,22 +477,19 @@ function renderFiles(filterName=""){
       <div class="fileName">${f.name}</div>
       <button class="actionBtn renameBtn">Rename</button>
       <button class="actionBtn deleteBtn">X</button>
-      <button class="actionBtn likeBtn" style="color:${isLiked?'red':'white'}">❤️</button>
+      <button class="actionBtn likeBtn" style="color:${isLiked?'red':'white'}; border:1px solid black;">❤️</button>
     `;
-    // rename
     c.querySelector(".renameBtn").onclick=e=>{
       e.stopPropagation();
       const n=prompt("New name:",f.name);
       if(n){f.name=n;save();renderFiles();}
     };
-    // delete
     c.querySelector(".deleteBtn").onclick=e=>{
       e.stopPropagation();
       galleries[currentGallery].files.splice(i,1);
       likedFiles = likedFiles.filter(fn=>fn!==f.name);
       save();renderFiles();
     };
-    // like
     c.querySelector(".likeBtn").onclick=e=>{
       e.stopPropagation();
       if(likedFiles.includes(f.name)){
@@ -501,7 +498,6 @@ function renderFiles(filterName=""){
       save();
       renderFiles();
     };
-    // modal
     c.onclick=()=>{document.getElementById("modalContent").innerHTML=f.type.startsWith("image")?`<img src="${f.data}">`:
       f.type.startsWith("video")?`<video src="${f.data}" controls autoplay></video>`:
       f.type.startsWith("audio")?`<audio src="${f.data}" controls autoplay></audio>`:
@@ -582,16 +578,18 @@ searchInput.oninput=e=>{
   renderFiles(val);
 };
 
-// --- liked files ---
+// --- liked files button ---
 likedFilesBtn.onclick=()=>{
   renderFiles(f=>likedFiles.includes(f.name));
 };
 
+// --- initial render ---
 renderGalleries();
 renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
