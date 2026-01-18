@@ -2,113 +2,133 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
-<title>MyGallery Premium</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MyGallery Premium 3.4</title>
 
 <style>
 :root{
+  --bg-light:#f0f4f8;
   --bg-dark:#000;
-  --bg-light:#f4f6fa;
 }
+
+/* ===== BODY ===== */
 body{
   margin:0;
-  font-family:Segoe UI, sans-serif;
+  font-family:'Segoe UI',sans-serif;
   display:flex;
   height:100vh;
-  transition:.5s;
+  transition:.4s;
 }
-body.dark{background:#000;color:white}
-body.light{background:var(--bg-light);color:#222}
+body.dark{
+  background:black;
+  color:white;
+  overflow:hidden;
+}
+body.light{
+  background:var(--bg-light);
+  color:#333;
+}
 
-/* SIDEBAR */
+/* ===== STARS ===== */
+.star{
+  position:absolute;
+  background:white;
+  border-radius:50%;
+  opacity:.6;
+  animation:twinkle 4s infinite alternate;
+}
+@keyframes twinkle{
+  0%,100%{opacity:.2}
+  50%{opacity:1}
+}
+
+/* ===== LIGHT BACKGROUNDS ===== */
+body.light.bg-gradient{
+  background:linear-gradient(135deg,#e3f2fd,#fce4ec);
+}
+body.light.bg-dots{
+  background:
+    radial-gradient(#ccc 1px,transparent 1px);
+  background-size:20px 20px;
+}
+
+/* ===== SIDEBAR ===== */
 #sidebar{
-  width:260px;
+  width:240px;
   padding:20px;
   background:rgba(255,255,255,.05);
-  backdrop-filter:blur(12px);
 }
-body.light #sidebar{background:white}
-.gallery{
+body.light #sidebar{background:#fff}
+
+.gallery-item{
   font-weight:bold;
-  padding:10px;
-  border-radius:10px;
-  margin-bottom:10px;
+  padding:8px 10px;
+  border-radius:8px;
+  margin-bottom:8px;
   display:flex;
   justify-content:space-between;
   align-items:center;
   cursor:pointer;
-  transition:.3s;
 }
-.gallery:hover{box-shadow:0 0 10px rgba(255,255,255,.4)}
-.controls{display:flex;gap:6px}
+.btnGroup{display:flex;gap:6px;position:relative}
+.btnGroup button{
+  background:none;
+  border:none;
+  cursor:pointer;
+}
 
-/* COLOR PALETTE */
+/* ===== COLOR PALETTE ===== */
 .palette{
-  display:flex;
-  gap:5px;
+  position:absolute;
+  top:24px;
+  right:0;
+  display:grid;
+  grid-template-columns:repeat(4,14px);
+  gap:6px;
+  padding:6px;
+  background:#111;
+  border-radius:8px;
 }
-.color{
+.palette div{
   width:14px;
   height:14px;
   border-radius:4px;
   cursor:pointer;
 }
-.red{background:red}
-.orange{background:orange}
-.yellow{background:yellow}
-.green{background:lime}
-.blue{background:dodgerblue}
-.purple{background:mediumpurple}
-.pink{background:hotpink}
 
-/* MAIN */
+/* ===== MAIN ===== */
 #main{flex:1;padding:20px}
-#top{display:flex;gap:10px;flex-wrap:wrap}
-button{
-  padding:10px;
-  border:none;
-  border-radius:10px;
-  cursor:pointer;
-  transition:.3s;
-}
-button:hover{transform:scale(1.05)}
-.modeBtn{
-  font-size:20px;
-  width:40px;
-  height:40px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
+#topControls{display:flex;gap:10px;flex-wrap:wrap}
 
-/* FILES */
-#files{
+/* ===== FILES ===== */
+#galleryContainer{
+  margin-top:20px;
   display:grid;
   grid-template-columns:repeat(auto-fill,180px);
   gap:20px;
-  margin-top:20px;
 }
-.card{
+.fileCard{
   background:rgba(255,255,255,.08);
   border-radius:16px;
   overflow:hidden;
   box-shadow:0 0 10px rgba(255,255,255,.2);
 }
-.card img,video{width:100%}
-.name{text-align:center;padding:6px;font-weight:500}
-.actions{
-  display:flex;
-  justify-content:space-between;
-  padding:6px;
-}
-.actions button{font-size:12px}
-
-/* EFFECTS */
-.effect{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none}
-.star,.rain,.snow{
+.fileCard img,.fileCard video{width:100%}
+.fileName{text-align:center;padding:6px}
+.actionBtn{
   position:absolute;
-  background:white;
-  opacity:.8;
+  top:10px;
+  padding:4px 6px;
+  font-size:12px;
+}
+.renameBtn{left:10px}
+.deleteBtn{right:10px}
+
+/* ===== MODE BTN ===== */
+.modeBtn{
+  width:36px;
+  height:36px;
+  font-size:18px;
 }
 </style>
 </head>
@@ -117,85 +137,116 @@ button:hover{transform:scale(1.05)}
 
 <div id="sidebar">
   <h3>Galleries</h3>
-  <div id="galleryList"></div>
-  <button onclick="addGallery()">➕ Gallery</button>
+  <div id="galleriesList"></div>
+  <button id="addGalleryBtn">➕</button>
+  <button id="toggleMode" class="modeBtn">☀️</button>
+  <button id="bgBtn" style="display:none">🎨 Background</button>
 </div>
 
 <div id="main">
-  <div id="top">
+  <div id="topControls">
     <input type="file" id="fileInput" multiple>
-    <button onclick="upload()">Upload</button>
-    <button id="bgBtn" onclick="changeBg()">🎆 Background</button>
-    <button class="modeBtn" onclick="toggleMode()">☀️</button>
+    <button id="uploadBtn">Upload</button>
+    <button id="clearBtn">Clear Gallery</button>
+    <input type="text" id="searchInput" placeholder="Rechercher...">
   </div>
-  <div id="files"></div>
+  <div id="galleryContainer"></div>
 </div>
 
 <script>
-let data=JSON.parse(localStorage.getItem("myGallery"))||{
+let state=JSON.parse(localStorage.getItem("galleryState"))||{
   mode:"dark",
-  bg:"none",
-  current:"gallery1",
-  galleries:{
-    gallery1:{color:"white",files:[]}
-  }
+  bg:"default",
+  galleries:{gallery1:{color:"#fff",files:[]}},
+  current:"gallery1"
 };
-document.body.className=data.mode;
 
-const colors=["red","orange","yellow","green","blue","purple","pink"];
+const colors=[
+  "#000","#f44336","#ff9800","#ffeb3b",
+  "#4caf50","#2196f3","#9c27b0","#e91e63"
+];
 
-function save(){localStorage.setItem("myGallery",JSON.stringify(data));}
+function save(){localStorage.setItem("galleryState",JSON.stringify(state));}
 
-function renderGalleries(){
-  galleryList.innerHTML="";
-  for(let g in data.galleries){
-    let div=document.createElement("div");
-    div.className="gallery";
-    div.style.color=data.galleries[g].color;
-    div.innerHTML=`<span>${g}</span>`;
-    let ctr=document.createElement("div");
-    ctr.className="controls";
-    let pal=document.createElement("div");
-    pal.className="palette";
-    colors.forEach(c=>{
-      let d=document.createElement("div");
-      d.className="color "+c;
-      d.onclick=e=>{e.stopPropagation();data.galleries[g].color=c;save();renderGalleries()}
-      pal.appendChild(d);
-    });
-    let ren=document.createElement("button");
-    ren.textContent="✏️";
-    ren.onclick=e=>{
-      e.stopPropagation();
-      let n=prompt("Rename gallery",g);
-      if(n&&!data.galleries[n]){
-        data.galleries[n]=data.galleries[g];
-        delete data.galleries[g];
-        if(data.current===g)data.current=n;
-        save();renderGalleries();renderFiles();
-      }
-    };
-    ctr.appendChild(pal);
-    ctr.appendChild(ren);
-    div.appendChild(ctr);
-    div.onclick=()=>{data.current=g;save();renderFiles();}
-    galleryList.appendChild(div);
+/* ===== STARS ===== */
+function stars(){
+  document.querySelectorAll(".star").forEach(s=>s.remove());
+  if(state.mode!=="dark") return;
+  for(let i=0;i<150;i++){
+    let s=document.createElement("div");
+    s.className="star";
+    s.style.top=Math.random()*100+"%";
+    s.style.left=Math.random()*100+"%";
+    let z=Math.random()*2+1;
+    s.style.width=z+"px";
+    s.style.height=z+"px";
+    document.body.appendChild(s);
   }
 }
 
+/* ===== GALLERIES ===== */
+function renderGalleries(){
+  galleriesList.innerHTML="";
+  for(let g in state.galleries){
+    let div=document.createElement("div");
+    div.className="gallery-item";
+    div.style.color=state.galleries[g].color;
+    div.innerHTML=`<span>${g}</span>`;
+
+    let grp=document.createElement("div");
+    grp.className="btnGroup";
+
+    let rename=document.createElement("button");
+    rename.textContent="✏️";
+    rename.onclick=e=>{
+      e.stopPropagation();
+      let n=prompt("Rename gallery",g);
+      if(n&&!state.galleries[n]){
+        state.galleries[n]=state.galleries[g];
+        delete state.galleries[g];
+        state.current=n;
+        save();renderGalleries();renderFiles();
+      }
+    };
+
+    let color=document.createElement("button");
+    color.textContent="🎨";
+    color.onclick=e=>{
+      e.stopPropagation();
+      let pal=document.createElement("div");
+      pal.className="palette";
+      colors.forEach(c=>{
+        let d=document.createElement("div");
+        d.style.background=c;
+        d.onclick=()=>{
+          state.galleries[g].color=c;
+          save();renderGalleries();
+        };
+        pal.appendChild(d);
+      });
+      grp.appendChild(pal);
+    };
+
+    grp.append(rename,color);
+    div.appendChild(grp);
+    div.onclick=()=>{state.current=g;renderFiles()};
+    galleriesList.appendChild(div);
+  }
+}
+
+/* ===== FILES ===== */
 function renderFiles(){
-  files.innerHTML="";
-  data.galleries[data.current].files.forEach((f,i)=>{
+  galleryContainer.innerHTML="";
+  state.galleries[state.current].files.forEach((f,i)=>{
     let c=document.createElement("div");
-    c.className="card";
+    c.className="fileCard";
     c.innerHTML=`
       ${f.type.startsWith("image")?`<img src="${f.data}">`:`<video src="${f.data}" controls></video>`}
-      <div class="name">${f.name}</div>
-      <div class="actions">
-        <button onclick="renameFile(${i})">Rename</button>
-        <button onclick="deleteFile(${i})">X</button>
-      </div>`;
-    files.appendChild(c);
+      <div class="fileName">${f.name}</div>
+      <button class="actionBtn renameBtn" onclick="renameFile(${i})">Rename</button>
+      <button class="actionBtn deleteBtn" onclick="deleteFile(${i})">X</button>
+    `;
+    galleryContainer.appendChild(c);
   });
 }
 
@@ -203,7 +254,7 @@ function upload(){
   [...fileInput.files].forEach(file=>{
     let r=new FileReader();
     r.onload=e=>{
-      data.galleries[data.current].files.push({name:file.name,type:file.type,data:e.target.result});
+      state.galleries[state.current].files.push({name:file.name,type:file.type,data:e.target.result});
       save();renderFiles();
     };
     r.readAsDataURL(file);
@@ -211,30 +262,42 @@ function upload(){
 }
 
 function renameFile(i){
-  let n=prompt("New name",data.galleries[data.current].files[i].name);
-  if(n){data.galleries[data.current].files[i].name=n;save();renderFiles();}
+  let n=prompt("New name",state.galleries[state.current].files[i].name);
+  if(n){state.galleries[state.current].files[i].name=n;save();renderFiles();}
 }
 function deleteFile(i){
-  data.galleries[data.current].files.splice(i,1);save();renderFiles();
+  state.galleries[state.current].files.splice(i,1);save();renderFiles();
 }
 
-function addGallery(){
-  let n="gallery"+(Object.keys(data.galleries).length+1);
-  data.galleries[n]={color:"white",files:[]};
-  data.current=n;save();renderGalleries();renderFiles();
-}
+/* ===== MODE ===== */
+toggleMode.onclick=()=>{
+  state.mode=state.mode==="dark"?"light":"dark";
+  document.body.className=state.mode;
+  bgBtn.style.display=state.mode==="light"?"block":"none";
+  save();stars();
+};
 
-function toggleMode(){
-  data.mode=data.mode==="dark"?"light":"dark";
-  document.body.className=data.mode;
+bgBtn.onclick=()=>{
+  state.bg=state.bg==="gradient"?"dots":state.bg==="dots"?"default":"gradient";
+  document.body.classList.remove("bg-gradient","bg-dots");
+  if(state.bg==="gradient")document.body.classList.add("bg-gradient");
+  if(state.bg==="dots")document.body.classList.add("bg-dots");
   save();
-}
+};
 
+/* INIT */
+document.body.className=state.mode;
+bgBtn.style.display=state.mode==="light"?"block":"none";
+if(state.bg==="gradient")document.body.classList.add("bg-gradient");
+if(state.bg==="dots")document.body.classList.add("bg-dots");
+
+stars();
 renderGalleries();
 renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
