@@ -3,9 +3,10 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 3.4</title>
+<title>MyGallery Premium 3.5</title>
 
 <style>
+/* ===== GLOBAL ===== */
 body{
   margin:0;
   font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
@@ -38,6 +39,7 @@ body{
   flex-direction:column;
   gap:10px;
   border-right:1px solid rgba(255,255,255,0.1);
+  z-index:2;
 }
 
 .gallery-item{
@@ -48,21 +50,22 @@ body{
   justify-content:space-between;
   align-items:center;
   font-weight:bold;
-  transition:0.3s;
-}
-
-.gallery-item.active{
-  box-shadow:0 0 18px currentColor;
+  color:white;
+  box-shadow:0 0 14px currentColor;
+  transition:transform 0.25s, box-shadow 0.25s;
 }
 
 .gallery-item:hover{
-  transform:scale(1.03);
-  box-shadow:0 0 12px currentColor;
+  transform:scale(1.04);
+  box-shadow:0 0 22px currentColor;
+}
+
+.gallery-item.active{
+  box-shadow:0 0 26px currentColor;
 }
 
 .btnGroup{
   display:flex;
-  align-items:center;
   gap:6px;
 }
 
@@ -76,17 +79,23 @@ body{
 
 /* ===== COLOR PICKER ===== */
 .colorPicker{
+  position:absolute;
   display:none;
-  gap:5px;
-  margin-left:6px;
+  grid-template-columns:repeat(3, 18px);
+  gap:6px;
+  padding:8px;
+  background:rgba(0,0,0,0.9);
+  border-radius:10px;
+  box-shadow:0 0 18px rgba(255,255,255,0.4);
+  z-index:999;
 }
 
 .colorBox{
-  width:14px;
-  height:14px;
-  border-radius:3px;
+  width:18px;
+  height:18px;
+  border-radius:4px;
   cursor:pointer;
-  box-shadow:0 0 6px rgba(255,255,255,0.7);
+  box-shadow:0 0 6px rgba(255,255,255,0.9);
 }
 
 /* ===== MAIN ===== */
@@ -103,6 +112,13 @@ body{
   margin-bottom:20px;
 }
 
+input, button{
+  padding:10px 14px;
+  border-radius:10px;
+  border:none;
+  font-size:14px;
+}
+
 #galleryContainer{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
@@ -111,6 +127,7 @@ body{
 
 /* ===== FILE CARDS ===== */
 .fileCard{
+  position:relative;
   background:rgba(255,255,255,0.05);
   border-radius:16px;
   overflow:hidden;
@@ -130,7 +147,8 @@ body{
   box-shadow:0 15px 30px rgba(0,0,0,0.6);
 }
 
-.fileCard img,.fileCard video{
+.fileCard img,
+.fileCard video{
   width:100%;
 }
 
@@ -146,10 +164,11 @@ body{
   border:none;
   border-radius:6px;
   cursor:pointer;
+  color:white;
 }
 
-.renameBtn{left:10px;background:#2196F3;color:white;}
-.deleteBtn{right:10px;background:#ff4d4d;color:white;}
+.renameBtn{left:10px;background:#2196F3;}
+.deleteBtn{right:10px;background:#ff4d4d;}
 
 /* ===== MODAL ===== */
 #modal{
@@ -159,9 +178,11 @@ body{
   background:rgba(0,0,0,0.85);
   justify-content:center;
   align-items:center;
+  z-index:1000;
 }
 
-#modal img,#modal video{
+#modal img,
+#modal video{
   max-width:90%;
   max-height:90%;
   border-radius:16px;
@@ -190,7 +211,7 @@ body{
     <input type="file" id="fileInput" multiple>
     <button id="uploadBtn">Upload</button>
     <button id="clearBtn">Clear Gallery</button>
-    <input type="text" id="searchInput" placeholder="Rechercher un fichier...">
+    <input type="text" id="searchInput" placeholder="Rechercher...">
   </div>
   <div id="galleryContainer"></div>
 </div>
@@ -202,15 +223,25 @@ body{
 
 <script>
 const colors=["red","orange","yellow","green","blue","purple","pink"];
-let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
+let galleries=JSON.parse(localStorage.getItem("galleries")) || {
+  gallery1:{files:[],color:"white"}
+};
 let currentGallery="gallery1";
+
+const galleriesList=document.getElementById("galleriesList");
+const galleryContainer=document.getElementById("galleryContainer");
+const fileInput=document.getElementById("fileInput");
 
 function save(){localStorage.setItem("galleries",JSON.stringify(galleries));}
 
+/* ===== GALLERIES ===== */
 function renderGalleries(){
   galleriesList.innerHTML="";
+  document.querySelectorAll(".colorPicker").forEach(p=>p.remove());
+
   for(const name in galleries){
     const g=galleries[name];
+
     const div=document.createElement("div");
     div.className="gallery-item"+(name===currentGallery?" active":"");
     div.style.color=g.color;
@@ -219,11 +250,11 @@ function renderGalleries(){
     const btnGroup=document.createElement("div");
     btnGroup.className="btnGroup";
 
-    const rename=document.createElement("button");
-    rename.textContent="✏️";
-    rename.onclick=e=>{
+    const renameBtn=document.createElement("button");
+    renameBtn.textContent="✏️";
+    renameBtn.onclick=e=>{
       e.stopPropagation();
-      const n=prompt("Nouveau nom:",name);
+      const n=prompt("Nouveau nom :",name);
       if(n&&!galleries[n]){
         galleries[n]=galleries[name];
         delete galleries[name];
@@ -245,42 +276,56 @@ function renderGalleries(){
       box.onclick=e=>{
         e.stopPropagation();
         g.color=c;
-        save();renderGalleries();
+        save();
+        picker.style.display="none";
+        renderGalleries();
       };
       picker.appendChild(box);
     });
 
     paletteBtn.onclick=e=>{
       e.stopPropagation();
-      picker.style.display=picker.style.display==="flex"?"none":"flex";
+      document.querySelectorAll(".colorPicker").forEach(p=>p.style.display="none");
+      const r=div.getBoundingClientRect();
+      picker.style.top=r.top+"px";
+      picker.style.left=(r.right+20)+"px";
+      picker.style.display="grid";
     };
 
-    btnGroup.append(rename,paletteBtn,picker);
+    btnGroup.append(renameBtn,paletteBtn);
     div.appendChild(btnGroup);
+    document.body.appendChild(picker);
 
-    div.onclick=()=>{currentGallery=name;renderGalleries();renderFiles();};
+    div.onclick=()=>{
+      currentGallery=name;
+      renderGalleries();
+      renderFiles();
+    };
+
     galleriesList.appendChild(div);
   }
 }
 
+/* ===== FILES ===== */
 function renderFiles(){
   galleryContainer.innerHTML="";
   galleries[currentGallery].files.forEach((f,i)=>{
     const c=document.createElement("div");
     c.className="fileCard";
     let html="";
-    if(f.type.startsWith("image"))html=`<img src="${f.data}">`;
-    else if(f.type.startsWith("video"))html=`<video src="${f.data}" controls></video>`;
+    if(f.type.startsWith("image")) html=`<img src="${f.data}">`;
+    else if(f.type.startsWith("video")) html=`<video src="${f.data}" controls></video>`;
     html+=`<div class="fileName">${f.name}</div>
-    <button class="actionBtn renameBtn">Rename</button>
-    <button class="actionBtn deleteBtn">X</button>`;
+           <button class="actionBtn renameBtn">Rename</button>
+           <button class="actionBtn deleteBtn">X</button>`;
     c.innerHTML=html;
 
     c.querySelector(".renameBtn").onclick=e=>{
       e.stopPropagation();
-      const n=prompt("Nouveau nom:",f.name);
+      const n=prompt("Nouveau nom :",f.name);
       if(n){f.name=n;save();renderFiles();}
     };
+
     c.querySelector(".deleteBtn").onclick=e=>{
       e.stopPropagation();
       galleries[currentGallery].files.splice(i,1);
@@ -299,19 +344,23 @@ function renderFiles(){
   });
 }
 
+/* ===== EVENTS ===== */
 uploadBtn.onclick=()=>{
   [...fileInput.files].forEach(file=>{
     const r=new FileReader();
     r.onload=e=>{
-      galleries[currentGallery].files.push({name:file.name,type:file.type,data:e.target.result});
+      galleries[currentGallery].files.push({
+        name:file.name,type:file.type,data:e.target.result
+      });
       save();renderFiles();
     };
     r.readAsDataURL(file);
   });
+  fileInput.value="";
 };
 
 clearBtn.onclick=()=>{
-  if(confirm("Supprimer toute la gallery ?")){
+  if(confirm("Supprimer toute la galerie ?")){
     galleries[currentGallery].files=[];
     save();renderFiles();
   }
@@ -325,7 +374,7 @@ searchInput.oninput=()=>{
 };
 
 addGalleryBtn.onclick=()=>{
-  const n=prompt("Nom de la nouvelle gallery:");
+  const n=prompt("Nom de la nouvelle galerie :");
   if(n&&!galleries[n]){
     galleries[n]={files:[],color:"white"};
     save();renderGalleries();
@@ -335,7 +384,8 @@ addGalleryBtn.onclick=()=>{
 closeModal.onclick=()=>modal.style.display="none";
 modal.onclick=e=>{if(e.target===modal)modal.style.display="none";};
 
-for(let i=0;i<200;i++){
+/* ===== STARS ===== */
+for(let i=0;i<220;i++){
   const s=document.createElement("div");
   s.className="star";
   s.style.top=Math.random()*100+"%";
@@ -349,6 +399,7 @@ renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
