@@ -41,24 +41,22 @@ body{
 #galleriesList{
   display:flex;
   flex-direction:column;
-  gap:16px; /* un peu plus serré */
-  overflow-y:auto; /* scrollable */
+  gap:16px;
+  overflow-y:auto; /* scroll vertical pour tout le bloc */
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: rgba(255,255,255,0.3) transparent;
 }
 
-/* cacher les scrollbars laides */
-#galleriesList::-webkit-scrollbar,
-#galleryContainer::-webkit-scrollbar {
+/* scrollbar verticale pour Chrome/Edge */
+#galleriesList::-webkit-scrollbar {
   width:6px;
-  height:6px;
 }
-#galleriesList::-webkit-scrollbar-thumb,
-#galleryContainer::-webkit-scrollbar-thumb {
-  background:rgba(255,255,255,0.3);
+#galleriesList::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3);
   border-radius:3px;
 }
-#galleriesList::-webkit-scrollbar-track,
-#galleryContainer::-webkit-scrollbar-track {
-  background:transparent;
+#galleriesList::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 .gallery-item{
@@ -68,15 +66,17 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  background:rgba(255,255,255,0.03); /* léger fond */
+  background:rgba(255,255,255,0.03);
   transition:0.3s;
   width:auto;
-  box-shadow:none; /* plus de glow */
+  box-shadow:none;
 }
 
+/* mini glow au hover */
 .gallery-item:hover{
   transform:scale(1.05);
-  background:rgba(255,255,255,0.06); /* hover subtil */
+  background:rgba(255,255,255,0.06);
+  box-shadow:0 0 6px rgba(255,255,255,0.2); /* mini glow subtil */
 }
 
 /* 🔥 MODIF pour emojis collés */
@@ -131,8 +131,20 @@ input,button{
   display:grid;
   grid-template-columns:repeat(5,minmax(180px,1fr));
   gap:48px;
-  overflow-y:auto; /* scrollable */
-  max-height:calc(100vh - 180px); /* pour scroll si besoin */
+  overflow-y:auto; /* scrollbar verticale propre */
+  max-height:calc(100vh - 180px);
+}
+
+/* scrollbar des uploads */
+#galleryContainer::-webkit-scrollbar {
+  width:6px;
+}
+#galleryContainer::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.3);
+  border-radius:3px;
+}
+#galleryContainer::-webkit-scrollbar-track {
+  background: transparent;
 }
 
 /* FILE CARDS */
@@ -495,8 +507,3 @@ document.getElementById("modal").onclick=e=>{if(e.target===document.getElementBy
 </script>
 </body>
 </html>
-
-
-
-
-
