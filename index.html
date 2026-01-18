@@ -58,10 +58,10 @@ body{
   box-shadow:0 0 26px currentColor;
 }
 
-/* 🔥 boutons rapprochés */
+/* 🔥 boutons très rapprochés */
 .btnGroup{
   display:flex;
-  gap:1px;
+  gap:2px;
 }
 
 .gallery-item button{
@@ -107,7 +107,7 @@ input,button{
 #galleryContainer{
   display:grid;
   grid-template-columns:repeat(5,minmax(180px,1fr));
-  gap:36px;
+  gap:48px;
   overflow-y:auto;
 }
 
@@ -361,7 +361,6 @@ function renderGalleries(){
       }
     };
 
-    // color picker grid
     const picker=document.createElement("div");
     picker.className="colorPicker";
     colors.forEach(c=>{
@@ -479,4 +478,5 @@ renderFiles();
 </script>
 </body>
 </html>
+
 
