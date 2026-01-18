@@ -4,75 +4,61 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MyGallery Premium 5.2 Final</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;700&display=swap" rel="stylesheet">
+
 <style>
-* { font-weight:700; box-sizing:border-box; }
-body { margin:0; font-family:'Segoe UI',Tahoma,Verdana,sans-serif; display:flex; height:100vh; background:#000; color:#fff; overflow:hidden; position:relative; }
+*{ font-weight:700; box-sizing:border-box;}
+body{ margin:0; font-family:'Segoe UI',Tahoma,Verdana,sans-serif; display:flex; height:100vh; background:#000; color:#fff; overflow:hidden; position:relative;}
 
 /* STARS */
 .star{position:absolute;background:white;border-radius:50%;opacity:0.6;animation:twinkle 4s infinite alternate;}
 @keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:1}}
 
-/* SIDEBAR */
 #sidebar{ width:240px; background:rgba(255,255,255,0.04); padding:20px; display:flex; flex-direction:column; gap:16px; border-right:1px solid rgba(255,255,255,0.1); z-index:2;}
 #galleriesList{ display:flex; flex-direction:column; gap:12px; overflow-y:auto; max-height:calc(100vh - 120px); padding-right:6px;}
-#galleriesList::-webkit-scrollbar{ width:6px; }
+#galleriesList::-webkit-scrollbar{ width:6px;}
 #galleriesList::-webkit-scrollbar-track{ background:rgba(255,255,255,0.05); border-radius:3px;}
-#galleriesList::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.3); border-radius:3px; }
+#galleriesList::-webkit-scrollbar-thumb{ background:rgba(255,255,255,0.3); border-radius:3px;}
 
-.gallery-item{ padding:12px; border-radius:14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; width:100%; min-height:48px; max-width:100%; box-shadow:none; transition:0.25s; position:relative; z-index:1; border:1px solid rgba(200,200,200,0.3); overflow:visible; word-break:break-word;}
-.galleryName{ flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:150px; }
+.gallery-item{ padding:12px; border-radius:14px; cursor:pointer; display:flex; justify-content:space-between; align-items:center; width:100%; min-height:48px; max-width:100%; box-shadow:none; transition:0.25s; position:relative; z-index:1; border: 1px solid rgba(200,200,200,0.3); overflow:visible; word-break:break-word;}
+.btnGroup{ display:flex; gap:0px; overflow:visible;}
+.gallery-item button{ background:none; border:none; color:white; cursor:pointer; font-size:16px; padding:0; margin:0;}
+.galleryName{ flex:1; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:150px;}
+#galleryCounter{ margin-top:auto; text-align:center; font-size:13px; opacity:0.7;}
 
-.btnGroup{ display:flex; gap:0px; overflow:visible; }
-
-.gallery-item button{ background:none; border:none; color:white; cursor:pointer; font-size:16px; padding:0; margin:0; }
-
-#galleryCounter{ margin-top:auto; text-align:center; font-size:13px; opacity:0.7; }
-
-/* MAIN */
 #main{ flex:1; padding:20px; display:flex; flex-direction:column; position:relative; overflow:hidden; z-index:1;}
 #currentGalleryName{ font-size:24px; margin-bottom:14px;}
-#topControls{ display:flex; gap:8px; margin-bottom:20px;}
-#searchInput{ flex:1; }
-
-input,button{ padding:10px 14px; border-radius:10px; border:none; }
-
-#galleryContainer{ display:grid; grid-template-columns:repeat(5,minmax(180px,1fr)); gap:48px; overflow-y:auto; max-height:calc(100vh - 180px); padding-right:6px; position:relative; z-index:1; }
+#topControls{ display:flex; gap:10px; margin-bottom:20px;}
+input,button{ padding:10px 14px; border-radius:10px; border:none;}
+#galleryContainer{ display:grid; grid-template-columns:repeat(5,minmax(180px,1fr)); gap:48px; overflow-y:auto; max-height:calc(100vh - 180px); padding-right:6px; position:relative; z-index:1;}
 
 /* FILE CARDS */
-.fileCard{ position:relative; background:rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; box-shadow:0 0 8px rgba(255,255,255,0.25); transform:translateY(20px); opacity:0; transition:0.4s; z-index:1; }
-.fileCard.show{ transform:translateY(0); opacity:1; }
+.fileCard{ position:relative; background:rgba(255,255,255,0.05); border-radius:16px; overflow:hidden; box-shadow:0 0 8px rgba(255,255,255,0.25); transform:translateY(20px); opacity:0; transition:0.4s; z-index:1;}
+.fileCard.show{ transform:translateY(0); opacity:1;}
 .fileCard:hover{ transform:translateY(-6px); box-shadow:0 20px 40px rgba(0,0,0,0.7);}
 .fileCard img,.fileCard video,.fileCard audio{width:100%;}
-
-.fileName{ text-align:center; padding:6px; }
+.fileName{ text-align:center; padding:6px;}
 .actionBtn{ position:absolute; top:10px; padding:4px 8px; border-radius:6px; color:white; cursor:pointer; font-size:12px; z-index:10;}
 .renameBtn{ left:10px; background:#2196F3;}
 .deleteBtn{ right:10px; background:#ff4d4d;}
-.likeBtn{ right:40px; cursor:pointer; font-size:16px; }
+.likeBtn{ right:50px; font-size:16px; cursor:pointer; padding:2px 6px; border-radius:50%; z-index:11; border:1px solid black; display:flex; align-items:center; justify-content:center;}
 
 /* MODAL */
 #modal{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85); justify-content:center; align-items:center; z-index:1000;}
-#modal img,#modal video,#modal audio{ max-width:90%; max-height:90%; border-radius:16px; }
-#closeModal{ position:absolute; top:20px; right:30px; font-size:36px; cursor:pointer; z-index:1001; }
+#modal img,#modal video,#modal audio{ max-width:90%; max-height:90%; border-radius:16px;}
+#closeModal{ position:absolute; top:20px; right:30px; font-size:36px; cursor:pointer; z-index:1001;}
 
 /* USERNAME */
 #usernameOverlay{ position:absolute; inset:0; background:rgba(0,0,0,0.96); display:flex; justify-content:center; align-items:center; flex-direction:column; z-index:2000;}
 #usernameOverlay input{ font-size:22px; padding:14px 22px; border-radius:14px; background:rgba(255,255,255,0.08); color:#fff; outline:none; border:none; text-align:center; box-shadow:0 0 30px rgba(255,255,255,0.6);}
-#usernameDisplay{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Montserrat',sans-serif; font-size:58px; font-weight:300; letter-spacing:2px; color:rgba(255,255,255,0.6); text-shadow:0 0 12px rgba(255,255,255,0.8),0 0 28px rgba(255,255,255,0.6),0 0 44px rgba(255,255,255,0.4); animation:twinkleGlow 4s infinite alternate, float 6s ease-in-out infinite; pointer-events:none; z-index:0; }
-
+#usernameDisplay{ position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-family:'Montserrat',sans-serif; font-size:58px; font-weight:300; letter-spacing:2px; color:rgba(255,255,255,0.6); text-shadow:0 0 12px rgba(255,255,255,0.8),0 0 28px rgba(255,255,255,0.6),0 0 44px rgba(255,255,255,0.4); animation:twinkleGlow 4s infinite alternate, float 6s ease-in-out infinite; pointer-events:none; z-index:2001;}
 @keyframes float{0%{transform:translate(-50%,-50%) translateY(0)}50%{transform:translate(-50%,-50%) translateY(4px)}100%{transform:translate(-50%,-50%) translateY(0)}}
 @keyframes twinkleGlow{0%,100%{text-shadow:0 0 2px #fff,0 0 6px #fff,0 0 12px #fff;}50%{text-shadow:0 0 8px #fff,0 0 16px #fff,0 0 24px #fff;}}
-
-/* CHANGE USERNAME BUTTON */
-#changeUsernameBtn{ position:absolute; top:20px; right:20px; padding:10px 18px; background:white; color:black; border-radius:14px; cursor:pointer; z-index:2002; }
-
-/* COLORS PICKER */
+#changeUsernameBtn{ position:absolute; top:20px; right:20px; padding:10px 18px; background:white; color:black; border-radius:14px; cursor:pointer; z-index:2002;}
 .colorPicker{ position:absolute; display:none; grid-template-columns:repeat(2,20px); gap:6px; padding:6px; background:rgba(0,0,0,0.9); border-radius:12px; box-shadow:0 0 18px rgba(255,255,255,0.4); z-index:999; max-height:180px; overflow-y:auto;}
-.colorBox{ width:20px; height:20px; border-radius:4px; cursor:pointer; box-shadow:0 0 6px rgba(255,255,255,0.9); }
-
-/* BUTTON HEART BIG NEXT TO SEARCH */
-#likedFilesBtn{ background:white; border:none; padding:0 12px; border-radius:10px; cursor:pointer; font-size:20px; height:100%; }
+.colorBox{ width:20px; height:20px; border-radius:4px; cursor:pointer; box-shadow:0 0 6px rgba(255,255,255,0.9);}
+#likedFilesBtn{ padding:10px 14px; border-radius:10px; background:white; color:black; border:none; cursor:pointer; margin-left:6px;}
 </style>
 </head>
 <body>
@@ -115,10 +101,10 @@ input,button{ padding:10px 14px; border-radius:10px; border:none; }
 const MAX_GALLERIES=10;
 const colors=["white","red","orange","yellow","green","blue","purple","#ff33cc"];
 let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
+let likedFiles=JSON.parse(localStorage.getItem("likedFiles"))||[];
 let currentGallery=Object.keys(galleries)[0];
 let username=localStorage.getItem("username")||"";
 let openPicker=null;
-let likedFiles = JSON.parse(localStorage.getItem("likedFiles"))||[];
 
 const galleriesList=document.getElementById("galleriesList");
 const galleryContainer=document.getElementById("galleryContainer");
@@ -150,9 +136,9 @@ function renderGalleries(){
     div.className="gallery-item";
     div.style.color=g.color;
 
-    const nameDiv=document.createElement("div");
-    nameDiv.className="galleryName";
+    const nameDiv = document.createElement("div");
     nameDiv.textContent=name;
+    nameDiv.className="galleryName";
 
     const btnGroup=document.createElement("div");
     btnGroup.className="btnGroup";
@@ -162,11 +148,11 @@ function renderGalleries(){
     renameBtn.onclick=e=>{
       e.stopPropagation();
       const n=prompt("New name:",name);
-      if(n && !galleries[n]){
+      if(n&&!galleries[n]){
         galleries[n]=galleries[name];
         delete galleries[name];
         currentGallery=n;
-        save(); renderGalleries(); renderFiles();
+        save();renderGalleries();renderFiles();
       }
     };
 
@@ -189,16 +175,6 @@ function renderGalleries(){
       };
       picker.appendChild(box);
     });
-    paletteBtn.onclick=e=>{
-      e.stopPropagation();
-      if(openPicker===picker){picker.style.display="none"; openPicker=null; return;}
-      document.querySelectorAll(".colorPicker").forEach(p=>p.style.display="none");
-      const r=div.getBoundingClientRect();
-      picker.style.top=(r.top+window.scrollY)+"px";
-      picker.style.left=(r.right+8)+"px";
-      picker.style.display="grid";
-      openPicker=picker;
-    };
 
     const deleteBtn=document.createElement("button");
     deleteBtn.textContent="🗑️";
@@ -207,7 +183,7 @@ function renderGalleries(){
       if(confirm("Delete gallery?")){
         delete galleries[name];
         currentGallery=Object.keys(galleries)[0]||"gallery1";
-        save(); renderGalleries(); renderFiles();
+        save();renderGalleries();renderFiles();
       }
     };
 
@@ -215,25 +191,22 @@ function renderGalleries(){
     div.appendChild(nameDiv);
     div.appendChild(btnGroup);
     document.body.appendChild(picker);
-    div.onclick=()=>{ currentGallery=name; renderFiles(); currentGalleryName.textContent=name; };
+    div.onclick=()=>{currentGallery=name;renderFiles();currentGalleryName.textContent=name};
     galleriesList.appendChild(div);
   }
-
   counter.textContent=`${Object.keys(galleries).length} / ${MAX_GALLERIES}`;
   addGalleryBtn.style.display=Object.keys(galleries).length>=MAX_GALLERIES?"none":"block";
 }
 
-function renderFiles(searchValue){
+function renderFiles(filter=null){
   galleryContainer.innerHTML="";
-  const files = galleries[currentGallery].files.filter(f=>{
-    if(!searchValue) return true;
-    return f.name.toLowerCase().includes(searchValue.toLowerCase());
-  });
-
-  files.forEach((f,i)=>{
+  let filesToRender = galleries[currentGallery].files;
+  if(typeof filter==="function") filesToRender = filesToRender.filter(filter);
+  else if(filter) filesToRender = filesToRender.filter(f=>f.name.toLowerCase().includes(filter.toLowerCase()));
+  
+  filesToRender.forEach((f,i)=>{
     const c=document.createElement("div");
     c.className="fileCard";
-    const isLiked = likedFiles.includes(f.name);
     c.innerHTML=`
       ${f.type.startsWith("image")?`<img src="${f.data}">`:
       f.type.startsWith("video")?`<video src="${f.data}" controls></video>`:
@@ -242,71 +215,60 @@ function renderFiles(searchValue){
       <div class="fileName">${f.name}</div>
       <button class="actionBtn renameBtn">Rename</button>
       <button class="actionBtn deleteBtn">X</button>
-      <button class="actionBtn likeBtn" style="color:${isLiked?'red':'white'}; text-shadow:0 0 1px black;">❤️</button>
+      <button class="likeBtn">${likedFiles.includes(f.name)?"❤️":"🤍"}</button>
     `;
-    // rename
     c.querySelector(".renameBtn").onclick=e=>{
       e.stopPropagation();
       const n=prompt("New name:",f.name);
-      if(n){ f.name=n; save(); renderFiles(searchValue); }
+      if(n){f.name=n;save();renderFiles();}
     };
-    // delete
     c.querySelector(".deleteBtn").onclick=e=>{
       e.stopPropagation();
       galleries[currentGallery].files.splice(i,1);
-      save(); renderFiles(searchValue);
+      likedFiles = likedFiles.filter(x=>x!==f.name);
+      save();renderFiles();
     };
-    // like
-    c.querySelector(".likeBtn").onclick=e=>{
+    const likeBtn = c.querySelector(".likeBtn");
+    likeBtn.onclick=e=>{
       e.stopPropagation();
-      if(likedFiles.includes(f.name)) likedFiles = likedFiles.filter(n=>n!==f.name);
+      if(likedFiles.includes(f.name)) likedFiles = likedFiles.filter(x=>x!==f.name);
       else likedFiles.push(f.name);
-      save(); renderFiles(searchValue);
+      save();
+      renderFiles();
     };
-    // click to view
-    c.onclick=()=>{
-      document.getElementById("modalContent").innerHTML=
-        f.type.startsWith("image")?`<img src="${f.data}">`:
-        f.type.startsWith("video")?`<video src="${f.data}" controls autoplay></video>`:
-        f.type.startsWith("audio")?`<audio src="${f.data}" controls autoplay></audio>`:
-        `<div class="fileName">${f.name}</div>`;
-      document.getElementById("modal").style.display="flex";
-    };
+    c.onclick=()=>{document.getElementById("modalContent").innerHTML=f.type.startsWith("image")?`<img src="${f.data}">`:
+      f.type.startsWith("video")?`<video src="${f.data}" controls autoplay></video>`:
+      f.type.startsWith("audio")?`<audio src="${f.data}" controls autoplay></audio>`:
+      `<div class="fileName">${f.name}</div>`; document.getElementById("modal").style.display="flex";};
     galleryContainer.appendChild(c);
     setTimeout(()=>c.classList.add("show"),50*i);
   });
 }
 
-// upload
 uploadBtn.onclick=()=>{
   const files = fileInput.files;
   if(!files.length) return;
   Array.from(files).forEach(file=>{
     const reader = new FileReader();
-    reader.onload=e=>{
-      galleries[currentGallery].files.push({
-        name:file.name,
-        type:file.type || "unknown",
-        data:e.target.result
-      });
-      save(); renderFiles(searchInput.value);
+    reader.onload = e => {
+      galleries[currentGallery].files.push({name:file.name,type:file.type || "unknown",data:e.target.result});
+      save();
+      renderFiles();
     };
     reader.readAsDataURL(file);
   });
   fileInput.value="";
 };
 
-// add gallery
 addGalleryBtn.onclick=()=>{
-  if(Object.keys(galleries).length>=MAX_GALLERIES) return;
+  if(Object.keys(galleries).length>=MAX_GALLERIES)return;
   const n=prompt("New gallery name:");
   if(n&&!galleries[n]){
     galleries[n]={files:[],color:"white"};
-    save(); renderGalleries();
+    save();renderGalleries();
   }
 };
 
-// username
 if(username){ usernameOverlay.style.display="none"; usernameDisplay.textContent=username; }
 usernameInput.onkeydown=e=>{
   if(e.key==="Enter"&&usernameInput.value.trim()){
@@ -316,36 +278,24 @@ usernameInput.onkeydown=e=>{
     usernameDisplay.textContent=username;
   }
 };
-changeUsernameBtn.onclick=()=>{ const n=prompt("New username:",username); if(n){username=n.trim(); save(); usernameDisplay.textContent=username;} };
+changeUsernameBtn.onclick=()=>{ const n=prompt("New username:",username); if(n){username=n.trim();save();usernameDisplay.textContent=username;} };
 
-// stars
-for(let i=0;i<200;i++){
-  const s=document.createElement("div");
-  s.className="star";
-  s.style.top=Math.random()*100+"%";
-  s.style.left=Math.random()*100+"%";
-  s.style.width=s.style.height=(Math.random()*2+1)+"px";
-  document.body.appendChild(s);
-}
+for(let i=0;i<200;i++){ const s=document.createElement("div"); s.className="star"; s.style.top=Math.random()*100+"%"; s.style.left=Math.random()*100+"%"; s.style.width=s.style.height=(Math.random()*2+1)+"px"; document.body.appendChild(s); }
 
-// modal
 const modal = document.getElementById("modal");
 const closeModal = document.getElementById("closeModal");
-closeModal.onclick = () => { modal.style.display="none"; };
-modal.onclick = e => { if(e.target === modal || e.target === closeModal) modal.style.display="none"; };
+closeModal.onclick = () => { modal.style.display = "none"; };
+modal.onclick = e => { if(e.target === modal || e.target === closeModal) modal.style.display = "none"; };
 
-// search
 searchInput.oninput=e=>{ renderFiles(e.target.value); };
-
-// liked files button
 likedFilesBtn.onclick=()=>{ renderFiles(f=>likedFiles.includes(f.name)); };
 
-// render initial
 renderGalleries();
 renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
