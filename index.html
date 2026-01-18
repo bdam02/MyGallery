@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MyGallery Premium 5.1</title>
 
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&display=swap" rel="stylesheet">
 
 <style>
 body{
@@ -23,7 +23,16 @@ body{
 .star{position:absolute;background:white;border-radius:50%;opacity:0.6;animation:twinkle 4s infinite alternate;}
 @keyframes twinkle{0%,100%{opacity:0.2}50%{opacity:1}}
 
-#sidebar{width:240px;background:rgba(255,255,255,0.04);padding:20px;display:flex;flex-direction:column;gap:28px;border-right:1px solid rgba(255,255,255,0.1);z-index:2;}
+#sidebar{
+  width:240px;
+  background:rgba(255,255,255,0.04);
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:28px;
+  border-right:1px solid rgba(255,255,255,0.1);
+  z-index:2;
+}
 #galleriesList{display:flex;flex-direction:column;gap:52px;}
 .gallery-item{
   padding:14px 16px;
@@ -32,38 +41,33 @@ body{
   display:flex;
   justify-content:space-between;
   align-items:center;
-  color:white;
   box-shadow:0 0 18px currentColor;
   transition:0.25s;
 }
 .gallery-item:hover{transform:scale(1.04);box-shadow:0 0 28px currentColor;}
-.gallery-item .btnGroup{display:flex;gap:6px;}
-.gallery-item button{background:none;border:none;color:white;cursor:pointer;font-size:16px}
+.btnGroup{display:flex;gap:6px;}
+.gallery-item button{background:none;border:none;color:white;cursor:pointer}
 
 #galleryCounter{margin-top:auto;text-align:center;font-size:13px;opacity:0.7}
 
-.colorPicker{
-  position:absolute;
-  display:none;
-  grid-template-columns:repeat(3,22px);
-  gap:8px;
-  padding:10px;
-  background:rgba(0,0,0,0.9);
-  border-radius:12px;
-  box-shadow:0 0 18px rgba(255,255,255,0.4);
-  z-index:999;
+#main{
+  flex:1;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  position:relative;
 }
-.colorBox{width:22px;height:22px;border-radius:4px;cursor:pointer;box-shadow:0 0 6px white}
-
-/* MAIN */
-#main{flex:1;padding:20px;display:flex;flex-direction:column;position:relative;}
 #currentGalleryName{font-size:24px;margin-bottom:14px;font-weight:bold;}
 
 #topControls{display:flex;gap:10px;margin-bottom:20px;}
-input,button{padding:10px 14px;border-radius:10px;border:none;font-size:14px}
+input,button{padding:10px 14px;border-radius:10px;border:none}
 button:hover{filter:brightness(0.9)}
 
-#galleryContainer{display:grid;grid-template-columns:repeat(5,minmax(180px,1fr));gap:64px}
+#galleryContainer{
+  display:grid;
+  grid-template-columns:repeat(5,minmax(180px,1fr));
+  gap:64px;
+}
 
 /* FILES */
 .fileCard{
@@ -81,7 +85,7 @@ button:hover{filter:brightness(0.9)}
 .fileCard img,.fileCard video{width:100%}
 .fileName{text-align:center;padding:6px}
 
-.actionBtn{position:absolute;top:10px;padding:4px 8px;border:none;border-radius:6px;color:white;cursor:pointer}
+.actionBtn{position:absolute;top:10px;padding:4px 8px;border-radius:6px;color:white;cursor:pointer}
 .renameBtn{left:10px;background:#2196F3}
 .deleteBtn{right:10px;background:#ff4d4d}
 
@@ -101,51 +105,45 @@ button:hover{filter:brightness(0.9)}
   flex-direction:column;
   z-index:10000;
 }
-
-#usernameOverlay h2{
-  font-size:26px;
-  margin-bottom:16px;
-  font-weight:400;
-}
-
+#usernameOverlay h2{font-weight:300;margin-bottom:14px}
 #usernameOverlay input{
   font-size:22px;
   padding:14px 22px;
   border-radius:14px;
-  border:none;
-  outline:none;
-  background:rgba(255,255,255,0.06);
+  background:rgba(255,255,255,0.08);
   color:#fff;
+  outline:none;
+  border:none;
   text-align:center;
-  box-shadow:0 0 24px rgba(255,255,255,0.5);
+  box-shadow:0 0 30px rgba(255,255,255,0.6);
 }
 
-/* ===== PREMIUM USERNAME DISPLAY ===== */
+/* ===== GLASS NEON USERNAME ===== */
 #usernameDisplay{
   position:absolute;
   top:50%;
   left:50%;
   transform:translate(-50%,-50%);
+  font-family:'Montserrat',sans-serif;
   font-size:58px;
-  font-family:'Montserrat', sans-serif;
   font-weight:300;
   letter-spacing:2px;
-  opacity:0.45;
-  color:#ffffff;
+  color:rgba(255,255,255,0.55);
+  backdrop-filter:blur(6px);
   text-shadow:
-    0 0 10px rgba(255,255,255,0.6),
-    0 0 22px rgba(120,255,200,0.5);
-  animation:usernameFloat 6s ease-in-out infinite;
+    0 0 10px rgba(255,255,255,0.4),
+    0 0 22px rgba(100,255,200,0.6),
+    0 0 40px rgba(100,255,200,0.4);
+  animation:glassFloat 7s ease-in-out infinite;
   pointer-events:none;
 }
-
-@keyframes usernameFloat{
-  0%{transform:translate(-50%,-50%) translateY(0px)}
-  50%{transform:translate(-50%,-50%) translateY(6px)}
-  100%{transform:translate(-50%,-50%) translateY(0px)}
+@keyframes glassFloat{
+  0%{transform:translate(-50%,-50%) translateY(0)}
+  50%{transform:translate(-50%,-50%) translateY(5px)}
+  100%{transform:translate(-50%,-50%) translateY(0)}
 }
 
-/* CHANGE USERNAME BUTTON */
+/* CHANGE USERNAME BTN */
 #changeUsernameBtn{
   position:absolute;
   top:20px;
@@ -154,13 +152,10 @@ button:hover{filter:brightness(0.9)}
   background:white;
   color:black;
   border-radius:14px;
-  font-weight:600;
   cursor:pointer;
+  font-weight:600;
 }
-#changeUsernameBtn:hover{
-  box-shadow:0 0 18px white;
-  transform:scale(1.05);
-}
+#changeUsernameBtn:hover{box-shadow:0 0 18px white;transform:scale(1.05)}
 </style>
 </head>
 <body>
@@ -199,12 +194,9 @@ button:hover{filter:brightness(0.9)}
 <div id="usernameDisplay"></div>
 
 <script>
-/* JS IDENTIQUE À TON SCRIPT – AUCUN CHANGEMENT LOGIQUE */
 const MAX_GALLERIES=10;
-const colors=["white","red","orange","yellow","green","blue","purple","#ff33cc"];
 let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
 let currentGallery="gallery1";
-let openPicker=null;
 let username=localStorage.getItem("username")||"";
 
 const galleriesList=document.getElementById("galleriesList");
@@ -214,36 +206,91 @@ const uploadBtn=document.getElementById("uploadBtn");
 const clearBtn=document.getElementById("clearBtn");
 const counter=document.getElementById("galleryCounter");
 const addGalleryBtn=document.getElementById("addGalleryBtn");
-const modal=document.getElementById("modal");
-const modalContent=document.getElementById("modalContent");
-const closeModal=document.getElementById("closeModal");
 const currentGalleryName=document.getElementById("currentGalleryName");
 const usernameOverlay=document.getElementById("usernameOverlay");
 const usernameInput=document.getElementById("usernameInput");
 const usernameDisplay=document.getElementById("usernameDisplay");
 const changeUsernameBtn=document.getElementById("changeUsernameBtn");
+const modal=document.getElementById("modal");
+const modalContent=document.getElementById("modalContent");
+const closeModal=document.getElementById("closeModal");
 
 function save(){
   localStorage.setItem("galleries",JSON.stringify(galleries));
   localStorage.setItem("username",username);
 }
-function updateUsernameDisplay(){usernameDisplay.textContent=username;}
 
+function updateCounter(){
+  const c=Object.keys(galleries).length;
+  counter.textContent=`${c} / ${MAX_GALLERIES}`;
+  addGalleryBtn.style.display=c>=MAX_GALLERIES?"none":"block";
+}
+
+function renderGalleries(){
+  galleriesList.innerHTML="";
+  for(const g in galleries){
+    const d=document.createElement("div");
+    d.className="gallery-item";
+    d.textContent=g;
+    d.onclick=()=>{currentGallery=g;renderFiles();currentGalleryName.textContent=g};
+    galleriesList.appendChild(d);
+  }
+  updateCounter();
+}
+
+function renderFiles(){
+  galleryContainer.innerHTML="";
+  galleries[currentGallery].files.forEach((f,i)=>{
+    const c=document.createElement("div");
+    c.className="fileCard";
+    c.innerHTML=(f.type.startsWith("image")?
+      `<img src="${f.data}">`:
+      `<video src="${f.data}" controls></video>`) +
+      `<div class="fileName">${f.name}</div>`;
+    galleryContainer.appendChild(c);
+    setTimeout(()=>c.classList.add("show"),50*i);
+  });
+}
+
+/* FIXED UPLOAD */
+uploadBtn.onclick=()=>{
+  [...fileInput.files].forEach(file=>{
+    const r=new FileReader();
+    r.onload=e=>{
+      galleries[currentGallery].files.push({name:file.name,type:file.type,data:e.target.result});
+      save();renderFiles();
+    };
+    r.readAsDataURL(file);
+  });
+  fileInput.value="";
+};
+
+/* FIXED ADD GALLERY */
+addGalleryBtn.onclick=()=>{
+  if(Object.keys(galleries).length>=MAX_GALLERIES)return;
+  const n=prompt("New gallery name:");
+  if(n&&!galleries[n]){
+    galleries[n]={files:[],color:"white"};
+    save();renderGalleries();
+  }
+};
+
+/* USERNAME */
 if(username){
   usernameOverlay.style.display="none";
-  updateUsernameDisplay();
+  usernameDisplay.textContent=username;
 }
 usernameInput.onkeydown=e=>{
   if(e.key==="Enter"&&usernameInput.value.trim()){
     username=usernameInput.value.trim();
     save();
     usernameOverlay.style.display="none";
-    updateUsernameDisplay();
+    usernameDisplay.textContent=username;
   }
 };
 changeUsernameBtn.onclick=()=>{
   const n=prompt("New username:",username);
-  if(n){username=n.trim();save();updateUsernameDisplay();}
+  if(n){username=n.trim();save();usernameDisplay.textContent=username;}
 };
 
 /* STARS */
@@ -255,9 +302,13 @@ for(let i=0;i<220;i++){
   s.style.width=s.style.height=(Math.random()*2+1)+"px";
   document.body.appendChild(s);
 }
+
+renderGalleries();
+renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
