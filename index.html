@@ -43,7 +43,7 @@ body{
   display:flex;
   flex-direction:column;
   gap:12px;
-  overflow-y:auto;
+  overflow-y:auto; /* UNE seule barre verticale pour toutes les galleries */
   max-height:calc(100vh - 120px);
   padding-right:6px;
 }
@@ -81,7 +81,7 @@ body{
 
 .btnGroup{
   display:flex;
-  gap:0px;
+  gap:0px; /* emojis vraiment très proches */
   overflow:visible;
 }
 
@@ -138,23 +138,11 @@ input,button{
   border:none;
 }
 
-#searchInput{
-  flex:1;
-}
-
-#likedFilesBtn{
-  background:none;
-  border:none;
-  font-size:28px;
-  color:pink;
-  cursor:pointer;
-}
-
 #galleryContainer{
   display:grid;
   grid-template-columns:repeat(5,minmax(180px,1fr));
   gap:48px;
-  overflow-y:auto;
+  overflow-y:auto; /* scroll vertical pour fichiers */
   max-height:calc(100vh - 180px);
   padding-right:6px;
   position:relative;
@@ -201,19 +189,35 @@ input,button{
 .renameBtn{left:10px;background:#2196F3}
 .deleteBtn{right:10px;background:#ff4d4d}
 
-/* Petits cœurs */
-.favoriteBtn{
+/* heart button on file */
+.likeBtn{
   position:absolute;
   top:10px;
-  right:40px;
-  font-size:16px;
+  right:50px;
+  font-size:14px;
   color:pink;
   cursor:pointer;
   z-index:10;
-  transition:transform 0.2s ease;
+  transition:0.2s;
 }
-.favoriteBtn.liked{
-  transform: scale(1.3);
+.likeBtn.clicked{
+  transform:scale(1.3);
+  transition:0.2s;
+}
+
+/* heart search button */
+#likedFilesBtn{
+  font-size:22px;
+  color:pink;
+  cursor:pointer;
+  padding:8px 12px;
+  border:none;
+  background:none;
+  border-radius:8px;
+  transition:0.2s;
+}
+#likedFilesBtn:hover{
+  transform:scale(1.1);
 }
 
 /* MODAL */
@@ -277,7 +281,7 @@ input,button{
   text-shadow:0 0 12px rgba(255,255,255,0.8),0 0 28px rgba(255,255,255,0.6),0 0 44px rgba(255,255,255,0.4);
   animation:twinkleGlow 4s infinite alternate, float 6s ease-in-out infinite;
   pointer-events:none;
-  z-index:2001;
+  z-index:0; /* username derrière tout */
 }
 
 @keyframes float{
@@ -336,7 +340,7 @@ input,button{
     <button id="uploadBtn">Upload</button>
     <button id="clearBtn">Clear Gallery</button>
     <input type="text" id="searchInput" placeholder="Search...">
-    <button id="likedFilesBtn">❤</button>
+    <button id="likedFilesBtn">💖</button>
   </div>
 
   <div id="galleryContainer"></div>
@@ -355,14 +359,16 @@ input,button{
 <div id="usernameDisplay"></div>
 
 <script>
+// ----- DATA -----
 const MAX_GALLERIES=10;
 const colors=["white","red","orange","yellow","green","blue","purple","#ff33cc"];
 let galleries=JSON.parse(localStorage.getItem("galleries"))||{gallery1:{files:[],color:"white"}};
+let likedFiles=JSON.parse(localStorage.getItem("likedFiles"))||[];
 let currentGallery=Object.keys(galleries)[0];
 let username=localStorage.getItem("username")||"";
 let openPicker=null;
-let favoritesFiles = JSON.parse(localStorage.getItem("favorites")) || [];
 
+// ----- ELEMENTS -----
 const galleriesList=document.getElementById("galleriesList");
 const galleryContainer=document.getElementById("galleryContainer");
 const fileInput=document.getElementById("fileInput");
@@ -375,15 +381,17 @@ const usernameOverlay=document.getElementById("usernameOverlay");
 const usernameInput=document.getElementById("usernameInput");
 const usernameDisplay=document.getElementById("usernameDisplay");
 const changeUsernameBtn=document.getElementById("changeUsernameBtn");
-const likedFilesBtn=document.getElementById("likedFilesBtn");
 const searchInput=document.getElementById("searchInput");
+const likedFilesBtn=document.getElementById("likedFilesBtn");
 
+// ----- SAVE -----
 function save(){
   localStorage.setItem("galleries",JSON.stringify(galleries));
   localStorage.setItem("username",username);
-  localStorage.setItem("favorites",JSON.stringify(favoritesFiles));
+  localStorage.setItem("likedFiles",JSON.stringify(likedFiles));
 }
 
+// ----- GALLERIES -----
 function renderGalleries(){
   galleriesList.innerHTML="";
   document.querySelectorAll(".colorPicker").forEach(p=>p.remove());
@@ -434,6 +442,17 @@ function renderGalleries(){
       picker.appendChild(box);
     });
 
+    paletteBtn.onclick=e=>{
+      e.stopPropagation();
+      if(openPicker===picker){picker.style.display="none";openPicker=null;return;}
+      document.querySelectorAll(".colorPicker").forEach(p=>p.style.display="none");
+      const r=div.getBoundingClientRect();
+      picker.style.top=(r.top+window.scrollY)+"px";
+      picker.style.left=(r.right+8)+"px";
+      picker.style.display="grid";
+      openPicker=picker;
+    };
+
     const deleteBtn=document.createElement("button");
     deleteBtn.textContent="🗑️";
     deleteBtn.onclick=e=>{
@@ -457,16 +476,22 @@ function renderGalleries(){
   addGalleryBtn.style.display=Object.keys(galleries).length>=MAX_GALLERIES?"none":"block";
 }
 
-function renderFiles(){
+// ----- FILES -----
+function renderFiles(filter=""){
   galleryContainer.innerHTML="";
-  let filesToRender = galleries[currentGallery].files;
-  const searchValue = searchInput.value.toLowerCase();
-  if(searchValue) filesToRender = filesToRender.filter(f=>f.name.toLowerCase().includes(searchValue));
+  let files = galleries[currentGallery].files;
 
-  filesToRender.forEach((f,i)=>{
+  if(filter){
+    files = files.filter(f=>f.name.toLowerCase().includes(filter.toLowerCase()));
+    files.sort((a,b)=>a.name.toLowerCase().includes(filter.toLowerCase())?-1:1);
+  }
+
+  files.forEach((f,i)=>{
     const c=document.createElement("div");
     c.className="fileCard";
-    c.innerHTML=` 
+
+    // file display
+    c.innerHTML=`
       ${f.type.startsWith("image")?`<img src="${f.data}">`:
       f.type.startsWith("video")?`<video src="${f.data}" controls></video>`:
       f.type.startsWith("audio")?`<audio src="${f.data}" controls></audio>`:
@@ -474,48 +499,54 @@ function renderFiles(){
       <div class="fileName">${f.name}</div>
       <button class="actionBtn renameBtn">Rename</button>
       <button class="actionBtn deleteBtn">X</button>
-      <span class="favoriteBtn ${favoritesFiles.includes(f.data)?'liked':''}">❤</span>
+      <div class="likeBtn ${likedFiles.includes(f.data)?"clicked":""}">💖</div>
     `;
-    // Rename
+
+    // rename
     c.querySelector(".renameBtn").onclick=e=>{
       e.stopPropagation();
       const n=prompt("New name:",f.name);
-      if(n){f.name=n;save();renderFiles();}
+      if(n){f.name=n;save();renderFiles(searchInput.value);}
     };
-    // Delete
+
+    // delete
     c.querySelector(".deleteBtn").onclick=e=>{
       e.stopPropagation();
       galleries[currentGallery].files.splice(i,1);
-      const idx=favoritesFiles.indexOf(f.data);
-      if(idx!==-1) favoritesFiles.splice(idx,1);
-      save();renderFiles();
+      likedFiles = likedFiles.filter(d=>d!==f.data);
+      save();renderFiles(searchInput.value);
     };
-    // Favorite
-    const favBtn = c.querySelector(".favoriteBtn");
-    favBtn.onclick=e=>{
+
+    // like
+    const likeBtn = c.querySelector(".likeBtn");
+    likeBtn.onclick=e=>{
       e.stopPropagation();
-      if(favoritesFiles.includes(f.data)){
-        favoritesFiles.splice(favoritesFiles.indexOf(f.data),1);
-        favBtn.classList.remove("liked");
+      if(likedFiles.includes(f.data)){
+        likedFiles = likedFiles.filter(d=>d!==f.data);
+        likeBtn.classList.remove("clicked");
       }else{
-        favoritesFiles.push(f.data);
-        favBtn.classList.add("liked");
+        likedFiles.push(f.data);
+        likeBtn.classList.add("clicked");
       }
       save();
     };
-    // Modal
-    c.onclick=()=>{document.getElementById("modalContent").innerHTML=
-      f.type.startsWith("image")?`<img src="${f.data}">`:
-      f.type.startsWith("video")?`<video src="${f.data}" controls autoplay></video>`:
-      f.type.startsWith("audio")?`<audio src="${f.data}" controls autoplay></audio>`:
-      `<div class="fileName">${f.name}</div>`;
+
+    // click to open
+    c.onclick=()=>{
+      document.getElementById("modalContent").innerHTML=
+        f.type.startsWith("image")?`<img src="${f.data}">`:
+        f.type.startsWith("video")?`<video src="${f.data}" controls autoplay></video>`:
+        f.type.startsWith("audio")?`<audio src="${f.data}" controls autoplay></audio>`:
+        `<div class="fileName">${f.name}</div>`;
       document.getElementById("modal").style.display="flex";
     };
-    galleryContainer.appendChild(c);
+
     setTimeout(()=>c.classList.add("show"),50*i);
+    galleryContainer.appendChild(c);
   });
 }
 
+// ----- UPLOAD -----
 uploadBtn.onclick=()=>{
   const files = fileInput.files;
   if(!files.length) return;
@@ -528,13 +559,14 @@ uploadBtn.onclick=()=>{
         data: e.target.result
       });
       save();
-      renderFiles();
+      renderFiles(searchInput.value);
     };
     reader.readAsDataURL(file);
   });
   fileInput.value="";
 };
 
+// ----- ADD GALLERY -----
 addGalleryBtn.onclick=()=>{
   if(Object.keys(galleries).length>=MAX_GALLERIES)return;
   const n=prompt("New gallery name:");
@@ -544,6 +576,7 @@ addGalleryBtn.onclick=()=>{
   }
 };
 
+// ----- USER -----
 if(username){
   usernameOverlay.style.display="none";
   usernameDisplay.textContent=username;
@@ -561,16 +594,16 @@ changeUsernameBtn.onclick=()=>{
   if(n){username=n.trim();save();usernameDisplay.textContent=username;}
 };
 
-// Liked files button
+// ----- SEARCH -----
+searchInput.oninput=e=>{
+  renderFiles(e.target.value);
+};
+
+// ----- LIKED FILES -----
 likedFilesBtn.onclick=()=>{
-  const likedFiles = [];
-  for(const g in galleries){
-    galleries[g].files.forEach(f=>{
-      if(favoritesFiles.includes(f.data)) likedFiles.push(f);
-    });
-  }
+  const likedGallery = galleries[currentGallery].files.filter(f=>likedFiles.includes(f.data));
   galleryContainer.innerHTML="";
-  likedFiles.forEach((f,i)=>{
+  likedGallery.forEach((f,i)=>{
     const c=document.createElement("div");
     c.className="fileCard";
     c.innerHTML=
@@ -578,15 +611,13 @@ likedFilesBtn.onclick=()=>{
       f.type.startsWith("video")?`<video src="${f.data}" controls></video>`:
       f.type.startsWith("audio")?`<audio src="${f.data}" controls></audio>`:
       `<div class="fileName">${f.name}</div>`;
+    c.onclick=()=>{document.getElementById("modalContent").innerHTML=c.innerHTML;document.getElementById("modal").style.display="flex";};
     setTimeout(()=>c.classList.add("show"),50*i);
     galleryContainer.appendChild(c);
   });
 };
 
-// Search input
-searchInput.oninput = () => { renderFiles(); };
-
-// Stars
+// ----- STARS -----
 for(let i=0;i<200;i++){
   const s=document.createElement("div");
   s.className="star";
@@ -596,17 +627,20 @@ for(let i=0;i<200;i++){
   document.body.appendChild(s);
 }
 
+// ----- RENDER -----
 renderGalleries();
 renderFiles();
 
-// Modal
+// ----- MODAL -----
 const modal = document.getElementById("modal");
 const closeModal = document.getElementById("closeModal");
 closeModal.onclick = () => { modal.style.display = "none"; };
-modal.onclick = e => { if(e.target === modal || e.target === closeModal) modal.style.display = "none"; };
+modal.onclick = e => { if(e.target === modal || e.target === closeModal) modal.style.display="none"; };
+
 </script>
 </body>
 </html>
+
 
 
 
