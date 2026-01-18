@@ -3,12 +3,12 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MyGallery Premium 3.7</title>
+<title>MyGallery Premium 3.8</title>
 
 <style>
 body{
   margin:0;
-  font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;
+  font-family:'Segoe UI',Tahoma,Verdana,sans-serif;
   display:flex;
   height:100vh;
   background:#000;
@@ -32,18 +32,28 @@ body{
 /* ===== SIDEBAR ===== */
 #sidebar{
   width:240px;
-  background:rgba(255,255,255,0.05);
+  background:rgba(255,255,255,0.04);
   padding:20px;
   display:flex;
   flex-direction:column;
-  gap:22px; /* ✅ PLUS ESPACÉ */
+  gap:28px; /* ✅ PLUS ESPACÉ */
   border-right:1px solid rgba(255,255,255,0.1);
   z-index:2;
 }
 
+#sidebar h3{
+  margin:0;
+}
+
+#galleriesList{
+  display:flex;
+  flex-direction:column;
+  gap:18px; /* ✅ empêche tout contact */
+}
+
 .gallery-item{
-  padding:12px 14px; /* ✅ PLUS AIR */
-  border-radius:12px;
+  padding:14px 16px;
+  border-radius:14px;
   cursor:pointer;
   display:flex;
   justify-content:space-between;
@@ -55,12 +65,12 @@ body{
 }
 
 .gallery-item:hover{
-  transform:scale(1.05);
-  box-shadow:0 0 28px currentColor;
+  transform:scale(1.04);
+  box-shadow:0 0 26px currentColor;
 }
 
 .gallery-item.active{
-  box-shadow:0 0 30px currentColor;
+  box-shadow:0 0 32px currentColor;
 }
 
 .btnGroup{
@@ -89,10 +99,10 @@ body{
   position:absolute;
   display:none;
   grid-template-columns:repeat(3, 18px);
-  gap:6px;
-  padding:8px;
+  gap:8px;
+  padding:10px;
   background:rgba(0,0,0,0.9);
-  border-radius:10px;
+  border-radius:12px;
   box-shadow:0 0 18px rgba(255,255,255,0.4);
   z-index:999;
 }
@@ -129,7 +139,7 @@ input, button{
 #galleryContainer{
   display:grid;
   grid-template-columns:repeat(auto-fill,minmax(180px,1fr));
-  gap:20px;
+  gap:22px;
 }
 
 /* ===== FILE CARDS ===== */
@@ -236,17 +246,17 @@ const colors=["red","orange","yellow","green","blue","purple","pink"];
 let galleries=JSON.parse(localStorage.getItem("galleries")) || {
   gallery1:{files:[],color:"white"}
 };
-
 let currentGallery="gallery1";
 let openPicker=null;
 
 const galleriesList=document.getElementById("galleriesList");
 const galleryContainer=document.getElementById("galleryContainer");
 const fileInput=document.getElementById("fileInput");
+const uploadBtn=document.getElementById("uploadBtn");
+const clearBtn=document.getElementById("clearBtn");
 const counter=document.getElementById("galleryCounter");
 
 function save(){localStorage.setItem("galleries",JSON.stringify(galleries));}
-
 function updateCounter(){
   counter.textContent = `${Object.keys(galleries).length} / ${MAX_GALLERIES}`;
 }
@@ -310,7 +320,7 @@ function renderGalleries(){
       document.querySelectorAll(".colorPicker").forEach(p=>p.style.display="none");
       const r=div.getBoundingClientRect();
       picker.style.top=r.top+"px";
-      picker.style.left=(r.right+20)+"px";
+      picker.style.left=(r.right+22)+"px";
       picker.style.display="grid";
       openPicker=picker;
     };
@@ -329,6 +339,36 @@ function renderGalleries(){
   }
   updateCounter();
 }
+
+/* ===== UPLOAD FIX ===== */
+uploadBtn.onclick=()=>{
+  const files=[...fileInput.files];
+  if(files.length===0){
+    alert("Sélectionne des fichiers");
+    return;
+  }
+  files.forEach(file=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      galleries[currentGallery].files.push({
+        name:file.name,
+        type:file.type,
+        data:e.target.result
+      });
+      save();
+      renderFiles();
+    };
+    reader.readAsDataURL(file);
+  });
+  fileInput.value="";
+};
+
+clearBtn.onclick=()=>{
+  if(confirm("Supprimer toute la galerie ?")){
+    galleries[currentGallery].files=[];
+    save();renderFiles();
+  }
+};
 
 function renderFiles(){
   galleryContainer.innerHTML="";
@@ -382,6 +422,7 @@ addGalleryBtn.onclick=()=>{
 closeModal.onclick=()=>modal.style.display="none";
 modal.onclick=e=>{if(e.target===modal)modal.style.display="none";};
 
+/* ===== STARS ===== */
 for(let i=0;i<220;i++){
   const s=document.createElement("div");
   s.className="star";
@@ -396,6 +437,7 @@ renderFiles();
 </script>
 </body>
 </html>
+
 
 
 
